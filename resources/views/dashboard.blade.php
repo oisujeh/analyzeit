@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class=" overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-4">
-                    <div class="col-span-1 bg-white">
+                    <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children currently receiving ART by Sex
                         </div>
@@ -18,7 +18,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-1 bg-white">
+                    <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children currently receiving ART by Age
                         </div>
@@ -26,7 +26,7 @@
                             <div class="chart" id="ageChart"></div>
                         </div>
                     </div>
-                    <div class="col-span-1 bg-white">
+                    <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children newly enrolled on ART by Sex
                         </div>
@@ -34,7 +34,7 @@
                             <div class="chart" id="newSexChart"></div>
                         </div>
                     </div>
-                    <div class="col-span-1 bg-white">
+                    <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children newly enrolled on ART by Age
                         </div>

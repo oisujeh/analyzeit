@@ -1,4 +1,4 @@
-<div id="tx_curr" class="mt-6">
+<div id="tx_curr" class="mt-6" style="display: none;">
     <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-4">
         <div class="col-span-1 bg-white drop-shadow-md">
             <div class="box-heading ml-2 mt-2 font-bold text-sm">
