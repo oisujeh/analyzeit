@@ -14,10 +14,12 @@
 
                     <!-- Main content -->
                     <div class="col-span-9">
-                        @include('monitoring.heading_content')
-                        @include('monitoring.tx_new')
-                        @include('monitoring.tx_curr')
-                        @include('monitoring.vl')
+                        <div id="report_containner"
+                            @include('monitoring.heading_content')
+                            @include('monitoring.tx_new')
+                            @include('monitoring.tx_curr')
+                            @include('monitoring.tx_pvls')
+                        </div>
                     </div>
                     <!-- End main content -->
                 </div>
@@ -28,12 +30,11 @@
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="{{ asset('assets/select2.js') }}"></script>
         <script src="{{asset('assets/filter.js')}}"></script>
+        <script src="{{asset('assets/highcharts-utils.js')}}"></script>
         <script>
             $(document).ready(function() {
                 $('.e2').select2({
-                    placeholder: "Choose...",
-                    maximumSelectionLength: 2,
-                    allowClear: true
+                    placeholder: "Choose..."
                 });
             });
         </script>
@@ -67,6 +68,56 @@
                     document.getElementById('tx_pvls').style.display = 'none';
                 }
             }
+        </script>
+        <script>
+            $(document).ready(function(){
+                $("#filters").submit(function(event){
+                    let selectReports = $('#selectIndicator');
+
+                    var state = [];
+                    $('#state :selected').each(function(){
+                        state.push($(this).val());
+                    });
+
+
+                    var formData = $("#filters").serializeArray();
+                    formData.push({
+                        name: 'states',
+                        value: state
+                    })
+
+                    console.log(formData);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('treatment.filter')}}",
+                        data: formData,
+                        dataType: 'json',
+                        encode: true,
+                    }).done(function(data){
+                        var response = data.treatment_perfomance;
+                         if(selectReports.val() === 'tx_pvls'){
+                             console.log("works");
+
+                             build_bar_chart_dual_axis(
+                                 "pvlsStateChart",
+                                 null,
+                                 'Number of Patients',
+                                 '% Suppression',
+                                 data.states,
+                                 data.eligibleWithVl,
+                                 'Viral Load Results',
+                                 data.viralLoadSuppressed,
+                                 'Suppression',
+                                 data.percentage_viral_load_suppressed,
+                                 '% Suppression',
+                                 false,
+                                 "State");
+                         }
+                    });
+                    event.preventDefault();
+                });
+            });
         </script>
     @endsection
 </x-app-layout>

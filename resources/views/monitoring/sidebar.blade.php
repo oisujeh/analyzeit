@@ -4,14 +4,15 @@
     <!--begin::Form-->
     <form class="" name="filterForm" id="filters" method="POST">
 
+
         <div class="col-span-6 sm:col-span-3">
             <label for="directorate" class="block text-sm text-gray-500 mt-3">
                 <i class="uil uil-list-ul"></i> Select MER Indicator
             </label>
 
-            <select id="selectIndicator" name="indicator" class="select2 mt-1 block w-full py-2 px-3
+            <select id="selectIndicator" name="selectIndicator" class="select2 mt-1 block w-full py-2 px-3
                                 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-                                focus:border-indigo-500 sm:text-sm" onchange="updateSelectedIndicator(this.value)" required>
+                                focus:border-indigo-500 sm:text-sm" onchange="updateSelectedIndicator(this.value)">
                 <option value="" disabled selected hidden>Choose ...</option>
                 <option value="tx_new">Treatment New</option>
                 <option value="tx_curr">Treatment Current</option>
@@ -24,8 +25,9 @@
             <label for="state" class="block text-sm text-gray-500 mt-5">
                 <i class="uil uil-map-pin-alt"></i> States
             </label>
-            <select id="state" name="state" class="e2 select2 select2-selection--multiple e2 mt-1 block w-full py-1 px-1.5 border border-gray-300 bg-white
-            rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" data-placeholder="Choose ...">
+            <select id="state" name="state" class="e2 select2 select2-selection--multiple mt-1 block w-full py-1 px-1.5 border border-gray-300 bg-white
+            rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
+                <option value="">Choose ...</option>
                 <option value="7">Benue</option>
                 <option value="28">Ogun</option>
                 <option value="29">Ondo</option>
@@ -41,7 +43,8 @@
             </label>
             <select id="lga" name="lga" class="e2 select2 mt-1 block w-full h-4 py-2 px-3 border
             border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-            focus:border-indigo-500 sm:text-sm" data-toggle="select2" >
+            focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
+                <option value="">Choose ...</option>
 
             </select>
         </div>
@@ -52,7 +55,7 @@
             </label>
             <select id="facility" name="facility" class="e2 select2 select2-selection--multiple mt-1 block w-full py-2 px-3 border
             border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-            focus:border-indigo-500 sm:text-sm" data-toggle="select2" >
+            focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
 
             </select>
         </div>
@@ -63,24 +66,24 @@
                 <label for="cat" class="block text-sm text-gray-500">
                     <i class="uil uil-schedule"></i> From Date
                 </label>
-                <input type="date" name="category" id="cat" class="mt-1 focus:ring-indigo-500
-                focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300
-                rounded-md" required placeholder="Category of Health Workers"/>
+                <input type="date" name="from" id="cat1" class="mt-1 focus:ring-indigo-500
+                 w-full shadow-sm sm:text-sm border-gray-300
+                rounded-md"/>
             </div>
 
             <div class="col-span-6 sm:col-span-3 mt-5 ">
                 <label for="cat" class="block text-sm text-gray-500">
                     <i class="uil uil-schedule"></i> To Date
                 </label>
-                <input type="date" name="category" id="cat" class="mt-1 focus:ring-indigo-500
-                focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300
-                rounded-md" required placeholder="Category of Health Workers"/>
+                <input type="date" name="to" id="cat2" class="mt-1 focus:ring-indigo-500
+                block w-full shadow-sm sm:text-sm border-gray-300
+                rounded-md"/>
             </div>
         </div>
 
 
         <div class="col-span-6 sm:col-span-3 mt-5 text-left">
-            <button type="submit" class="inline-flex justify-center py-2 px-4
+            <button class="inline-flex justify-center py-2 px-4
             border border-transparent shadow-sm text-sm font-bold rounded-md
             text-white bg-indigo-500 hover:bg-indigo-700 focus:outline-none
             focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Load Data

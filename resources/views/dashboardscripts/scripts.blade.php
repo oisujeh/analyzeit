@@ -1,6 +1,8 @@
 <script>
     $(document).ready(function() {
-        var students =  <?php echo json_encode($students); ?>;
+        var students =  <?php if (isset($students)) {
+            echo json_encode($students);
+        } ?>;
         var options = {
             chart: {
                 renderTo: 'pie_chart',
@@ -17,9 +19,24 @@
                     return '<b>'+ this.point.name +'</b>'+ '<br>'+'<b>' + this.point.y.toLocaleString('en-US') + '</b> (' + this.percentage.toFixed(1) + '%)';
                 }
             },
-            exporting: {
-                enabled: false
-            }, credits: {
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: [
+                                'viewFullscreen', 'separator', 'downloadPNG',
+                                'downloadSVG', 'downloadPDF', 'separator', 'downloadXLS'
+                            ]
+                        },
+                    },
+                    enabled: true,
+                },
+                navigation: {
+                    buttonOptions: {
+                        align: 'right',
+                        verticalAlign: 'top',
+                        y: 0
+                    }
+                }, credits: {
                 enabled: false
             },
 
@@ -75,7 +92,9 @@
 </script>
 <script>
     $(document).ready(function() {
-        var txcurrAge =  <?php echo json_encode($txcurrAge); ?>;
+        var txcurrAge =  <?php if (isset($txcurrAge)) {
+            echo json_encode($txcurrAge);
+        } ?>;
         var options = {
             chart: {
                 renderTo: 'ageChart',
@@ -89,9 +108,24 @@
                     return '<b>'+ this.point.name +'</b>'+ '<br>'+'<b>' + this.point.y.toLocaleString('en-US') + '</b> (' + this.percentage.toFixed(1) + '%)';
                 }
             },
-            exporting: {
-                enabled: false
-            }, credits: {
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: [
+                                'viewFullscreen', 'separator', 'downloadPNG',
+                                'downloadSVG', 'downloadPDF', 'separator', 'downloadXLS'
+                            ]
+                        },
+                    },
+                    enabled: true,
+                },
+                navigation: {
+                    buttonOptions: {
+                        align: 'right',
+                        verticalAlign: 'top',
+                        y: 0
+                    }
+                }, credits: {
                 enabled: false
             },
             plotOptions: {
@@ -147,7 +181,9 @@
 </script>
 <script>
     $(document).ready(function() {
-        var studentsNew =  <?php echo json_encode($studentsNew); ?>;
+        var studentsNew =  <?php if (isset($studentsNew)) {
+            echo json_encode($studentsNew);
+        } ?>;
         var options = {
             chart: {
                 renderTo: 'newSexChart',
@@ -164,9 +200,24 @@
                     return '<b>'+ this.point.name +'</b>'+ '<br>'+'<b>' + this.point.y.toLocaleString('en-US') + '</b> (' + this.percentage.toFixed(1) + '%)';
                 }
             },
-            exporting: {
-                enabled: false
-            }, credits: {
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: [
+                                'viewFullscreen', 'separator', 'downloadPNG',
+                                'downloadSVG', 'downloadPDF', 'separator', 'downloadXLS'
+                            ]
+                        },
+                    },
+                    enabled: true,
+                },
+                navigation: {
+                    buttonOptions: {
+                        align: 'right',
+                        verticalAlign: 'top',
+                        y: 0
+                    }
+                }, credits: {
                 enabled: false
             },
             plotOptions: {
@@ -221,7 +272,9 @@
 </script>
 <script>
     $(document).ready(function() {
-        var txnewAge =  <?php echo json_encode($txnewAge); ?>;
+        var txnewAge =  <?php if (isset($txnewAge)) {
+            echo json_encode($txnewAge);
+        } ?>;
         var options = {
             chart: {
                 renderTo: 'newAgeChart',
@@ -235,9 +288,24 @@
                     return '<b>'+ this.point.name +'</b>'+ '<br>'+'<b>' + this.point.y.toLocaleString('en-US') + '</b> (' + this.percentage.toFixed(1) + '%)';
                 }
             },
-            exporting: {
-                enabled: false
-            }, credits: {
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: [
+                                'viewFullscreen', 'separator', 'downloadPNG',
+                                'downloadSVG', 'downloadPDF', 'separator', 'downloadXLS'
+                            ]
+                        },
+                    },
+                    enabled: true,
+                },
+                navigation: {
+                    buttonOptions: {
+                        align: 'right',
+                        verticalAlign: 'top',
+                        y: 0
+                    }
+                }, credits: {
                 enabled: false
             },
             plotOptions: {

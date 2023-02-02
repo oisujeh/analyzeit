@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Helpers\Scripts as Helper;
+use Illuminate\Support\Facades\View;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +19,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('/treatment-filter', function(Request $request){
+    if($request->selectedIndicator == 'tx_pvls'){
+        return Helper::vLGraph($request,$request->selectedIndicator);
+    }
+})->name('treatment.filter');
+
+Route::get('/get-wiget/{id}', function($page){
+    return View::make('monitoring.'.$page);
 });
