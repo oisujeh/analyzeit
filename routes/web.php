@@ -30,6 +30,8 @@ Route::middleware([
 
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
-Route::get('/pages', [App\Http\Controllers\MonitoringController::class,'index'])->name('pages');
+Route::get('monitoring/pages', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
+
+Route::get('/reports/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
 

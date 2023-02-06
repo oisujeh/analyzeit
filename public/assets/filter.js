@@ -9,10 +9,10 @@ $(function () {
 
 
 
-    /*selectReports.change(function (e) {
+    selectReports.change(function (e) {
         let uri = baseUrlWiget+$(this).val()
         $('#report_containner').load(uri);
-    });*/
+    });
 
     selectStates.change(function (e) {
 

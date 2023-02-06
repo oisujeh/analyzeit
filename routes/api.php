@@ -24,9 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/treatment-filter', function(Request $request){
     if($request->selectedIndicator == 'tx_pvls'){
         return Helper::vLGraph($request,$request->selectedIndicator);
+    }else{
+        return Helper::treamentPerformance($request,$request->selectedIndicator);
     }
 })->name('treatment.filter');
 
 Route::get('/get-wiget/{id}', function($page){
-    return View::make('monitoring.'.$page);
+    return View::make('monitoring.reports.'.$page);
 });

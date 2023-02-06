@@ -10,11 +10,11 @@ use App\Helpers\Scripts as Helper;
 
 class MonitoringController extends Controller
 {
-    public function index(): Factory|View|Application
+    public function treatmentDashboard(): Factory|View|Application
     {
         /*$data = [
             'dashboardGraphs' => Helper::dashboardGraphs()
         ];*/
-        return view('/pages');
+        return view('monitoring.pages');
     }
 }
