@@ -15,6 +15,6 @@ class MonitoringController extends Controller
         /*$data = [
             'dashboardGraphs' => Helper::dashboardGraphs()
         ];*/
-        return view('monitoring.pages');
+        return view('monitoring.treatment_dashboard');
     }
 }

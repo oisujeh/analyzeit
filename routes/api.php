@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/treatment-filter', function(Request $request){
-    if($request->selectedIndicator == 'tx_pvls'){
+    if($request->selectedIndicator == 'pvls'){
         return Helper::vLGraph($request,$request->selectedIndicator);
     }else{
         return Helper::treamentPerformance($request,$request->selectedIndicator);

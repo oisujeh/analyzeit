@@ -19,7 +19,8 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 
 
@@ -66,7 +67,6 @@
                         <!--begin::Form-->
                         <form id="filters" method="POST">
 
-
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="directorate" class="block text-sm text-gray-500 mt-3">
                                     <i class="uil uil-list-ul"></i> Select MER Indicator
@@ -78,7 +78,7 @@
                                     <option value="" disabled selected hidden>Choose ...</option>
                                     <option value="tx_new">Treatment New</option>
                                     <option value="tx_curr">Treatment Current</option>
-                                    <option value="tx_pvls">Treatment PVLS</option>
+                                    <option value="pvls">Treatment PVLS</option>
                                 </select>
                             </div>
 
@@ -226,6 +226,7 @@
             $(".tx_facilities").html('...')
             $(".tx_states").html('...')
             $(".tx_lgas").html('...')
+            $(".tx_eligible").html('...')
 
             console.log(formData);
 
@@ -263,12 +264,12 @@
                         data.tx_new_state_data,
                         data.tx_new_lga_drill_data);
 
-                } else if (selectReports.val() == 'tx_pvls') {
+                } else if (selectReports.val() == 'pvls') {
 
-                    $(".tx_facilites").html(response.eligible)
-                    $(".tx_states").html(response.supressedVl)
-                    $(".tx_lgas").html(response.eligibleWithVl)
-                    $(".tx_curr").html(response.active);
+                    $(".tx_curr").html(Number(response.active).toLocaleString())
+                    $(".tx_eligible").html(Number(response.eligible).toLocaleString())
+                    /*$(".tx_lgas").html(response.eligibleWithVl)
+                    $(".tx_curr").html(response.active);*/
 
                     build_bar_chart_dual_axis(
                         "pvlsStateChart",
@@ -285,12 +286,11 @@
                         false,
                         "State");
                 }
+                console.log(data);
             });
             event.preventDefault();
         });
     });
-
-
 </script>
 </body>
 </html>

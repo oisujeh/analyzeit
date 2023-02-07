@@ -4,13 +4,48 @@ namespace App\Helpers;
 
 use App\Models\TreatmentPerformance;
 use App\Models\VLPerformance;
-use Illuminate\Http\Request;
+use App\HTSPerformance;
 use Illuminate\Support\Facades\DB;
 
 class Scripts
 {
+
+    public static function dashboardSummary()
+    {
+        $statsql = "
+        COALESCE(SUM(`total_patients`),0) `total_patients`,
+        COALESCE(SUM(`tx_new`),0) tx_new,
+        COALESCE(SUM(`pbs`),0) pbs,
+        COALESCE(SUM(`active`),0) active,
+        COALESCE(SUM(`transferred_out`),0) transferred_out,
+        COALESCE(SUM(`dead`),0) dead,
+        COALESCE(SUM(`stopped`),0) stopped,
+        COALESCE(SUM(`ltfu`),0) `ltfu`,
+        `IP` ";
+
+        $list =  DB::table('treament_report')
+            ->select(DB::raw($statsql))
+            //->where(['State'=>'Benue'])
+            ->groupBy('IP')
+            ->first();
+        return $list;
+    }
+
+    public static function summaryList()
+    {
+        $statsql = "*";
+        $list =  DB::table('treament_report')
+            ->select(DB::raw($statsql))
+            //->where(['State'=>'Benue'])
+            ->get();
+        return $list;
+    }
+
+
     public static function dashboardGraphs()
     {
+
+
         $graphSql  = " `state` AS 'name', COUNT(`PepID`) AS  'y', `state` AS 'drilldown' ";
         $graphSql2 = " `lga` as 'lga',count(pepid) as  'patients'";
         $graphSql3 = " DAYNAME(next_appointment) as days, count(`pepid`) as patients";
@@ -27,51 +62,7 @@ class Scripts
         ];
     }
 
-    public static function vLGraph($data): array
-    {
 
-        $facilityList = VLPerformance::select(DB::raw(
-            "CAST(COALESCE(SUM(active),0)  AS UNSIGNED) as `active`,
-            CAST(COALESCE(SUM(eligible),0)  AS UNSIGNED) as `eligible`,
-            CAST(COALESCE(SUM(supressedVl),0)  AS UNSIGNED) as supressedVl,
-            CAST(COALESCE(SUM(eligibleWithVl),0)  AS UNSIGNED) as eligibleWithVl,
-            state"
-        ))
-            ->state($data->states)
-            ->groupBy('state')
-            ->withoutGlobalScopes()
-            ->get();
-
-        $state = [];
-        $txCurr = [];
-        $eligible = [];
-        $eligibleWithVl = [];
-        $viralLoadSuppressed = [];
-        $txVlCoverage = [];
-        $percentageViralLoadSuppressed = [];
-        foreach ($facilityList as $index => $list) {
-            $state[$index] =  $list->state;
-            $txCurr[$index] =  $list->active;
-            $eligible[$index] =  $list->eligible;
-            $eligibleWithVl[$index] = $list->eligibleWithVl;
-            $viralLoadSuppressed[$index] =  $list->supressedVl;
-            $txVlCoverage[$index] = round((($list->eligible/$list->eligibleWithVl)*100),2);
-            $percentageViralLoadSuppressed[$index] =  round((($list->supressedVl/$list->eligibleWithVl)*100),2);
-        }
-
-        $result=[
-            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
-            'states'=>$state,
-            'eligible' => $eligible,
-            'eligibleWithVl' => $eligibleWithVl,
-            'tx_curr'=>$txCurr,
-            'viralLoadSuppressed'=>$viralLoadSuppressed,
-            'tx_Vl_Coverage'=>$txVlCoverage,
-            'percentage_viral_load_suppressed'=>$percentageViralLoadSuppressed
-        ];
-
-        return (!empty($result)) ?  $result : [];
-    }
 
     public static function plotGraphByLGA($tableName, $lgaList, $graphSql)
     {
@@ -250,5 +241,100 @@ class Scripts
             array_push($stateListBar, $list);
         }
         return (!empty($stateListBar)) ?  $stateListBar   : [];
+    }
+
+    public static function vLGraph($data)
+    {
+        $facilityList = VLPerformance::select(DB::raw(
+            "CAST(COALESCE(SUM(active),0)  AS UNSIGNED) as `active`,
+            CAST(COALESCE(SUM(eligible),0)  AS UNSIGNED) as `eligible`,
+            CAST(COALESCE(SUM(supressedVl),0)  AS UNSIGNED) as supressedVl ,
+            CAST(COALESCE(SUM(eligibleWithVl),0)  AS UNSIGNED) as eligibleWithVl ,
+            state"
+        ))
+            ->state($data->states)
+            ->groupBy('state')
+            ->orderBy('state', 'ASC')
+            //->groupBy('eligibleWithVl')
+            // ->groupBy('eligible')
+            // ->groupBy('supressedVl')
+            // ->groupBy('active')
+            // ->groupBy('lgaCode')
+            // ->groupBy('facility_name')
+            ->withoutGlobalScopes()
+            ->get();
+
+        $state = [];
+        $txCurr = [];
+        $eligible = [];
+        $eligibleWithVl = [];
+        $viralLoadSuppressed = [];
+        $txVlCoverage = [];
+        $percentageViralLoadSuppressed = [];
+        foreach ($facilityList as $index => $list) {
+            $state[$index] =  $list->state;
+            $txCurr[$index] =  $list->active;
+            $eligible[$index] =  $list->eligible;
+            $eligibleWithVl[$index] = $list->eligibleWithVl;
+            $viralLoadSuppressed[$index] =  $list->supressedVl;
+            $txVlCoverage[$index] = round((($list->eligible/$list->eligibleWithVl)*100),2);
+            $percentageViralLoadSuppressed[$index] =  round((($list->supressedVl/$list->eligibleWithVl)*100),2);
+        }
+
+        $result=[
+            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'states'=>$state,
+            'eligible' => $eligible,
+            'eligibleWithVl' => $eligibleWithVl,
+            'tx_curr'=>$txCurr,
+            'viralLoadSuppressed'=>$viralLoadSuppressed,
+            'tx_Vl_Coverage'=>$txVlCoverage,
+            'percentage_viral_load_suppressed'=>$percentageViralLoadSuppressed
+        ];
+
+        return (!empty($result)) ?  $result : [];
+    }
+
+    public static function htsGraph($data)
+    {
+
+        $facilityList = HTSPerformance::select(DB::raw(
+            "FORMAT(COALESCE(COUNT(DISTINCT `state`),0),0) `states`,
+            CAST(COALESCE(SUM(hts_tst),0)  AS UNSIGNED) as `hts_tst`,
+            CAST(COALESCE(SUM(hts_tst_pos),0)  AS UNSIGNED) as `hts_tst_pos`,
+            state
+            "
+        ))
+            ->state($data->states)
+            ->groupBy('state')
+            // ->groupBy('eligibleWithVl')
+            // ->groupBy('eligible')
+            // ->groupBy('supressedVl')
+            // ->groupBy('active')
+            // ->groupBy('lgaCode')
+            // ->groupBy('facility_name')
+            ->withoutGlobalScopes()
+            ->get();
+
+        $state = [];
+        $hts_tst = [];
+        $hts_tst_pos = [];
+        $percentage_yield = [];
+        foreach ($facilityList as $index => $list) {
+            $state[$index] =  $list->state;
+            $hts_tst[$index] =  $list->hts_tst;
+            $hts_tst_pos[$index] =  $list->hts_tst_pos;
+            $percentage_yield[$index] =  round((($list->hts_tst_pos/$list->hts_tst)*100),2);
+        }
+
+        $result=[
+            'hts_performance' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'states'=>$state,
+            'hts_tst' => $hts_tst,
+            'hts_tst_pos'=>$hts_tst_pos,
+            'percentage_yield'=>$percentage_yield
+        ];
+
+        return (!empty($result)) ?  $result : [];
     }
 }
