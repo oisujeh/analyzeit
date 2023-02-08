@@ -170,6 +170,27 @@ class Scripts
         return (!empty($list)) ?  $list : [];
     }
 
+    public static function treamentPerformanceAgeGraph($data, $tx)
+    {
+
+        $statsql = "
+        state AS `name`,
+        CAST(COALESCE(SUM($tx),0)  AS UNSIGNED) AS `y`,
+        state AS `drilldown`";
+        $list =  TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)
+            ->lga($data->lgas)
+            ->facilities($data->facilities)
+            ->groupBy('name')
+            ->orderBy('name', 'ASC')
+            ->withoutGlobalScopes()
+            ->get();
+
+        return (!empty($list)) ?  $list : [];
+    }
+
+
+
     public static function treamentPerformanceLgaGraph($data, $tx)
     {
 
@@ -212,7 +233,7 @@ class Scripts
 
         $facilityList =  TreatmentPerformance::select(DB::raw(
             "lga, lgaCode,facility_name , CAST(COALESCE(SUM($tx),0)  AS UNSIGNED) as  'patients'"
-        ))
+        ))->lga($data->lgas)->facilities($data->facilities)
             ->groupBy('lga')
             ->groupBy('lgaCode')
             ->groupBy('facility_name')
@@ -253,7 +274,7 @@ class Scripts
             CAST(COALESCE(SUM(eligibleWithVl),0)  AS UNSIGNED) as eligibleWithVl ,
             state"
         ))
-            ->state($data->states)
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
             ->groupBy('state')
             ->orderBy('state', 'ASC')
             //->groupBy('eligibleWithVl')
@@ -266,6 +287,8 @@ class Scripts
             ->get();
 
         $state = [];
+        $lga = [];
+        $facility =[];
         $txCurr = [];
         $eligible = [];
         $eligibleWithVl = [];
@@ -285,6 +308,8 @@ class Scripts
         $result=[
             'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'states'=>$state,
+            'lgas'=>$lga,
+            'facilities'=>$facility,
             'eligible' => $eligible,
             'eligibleWithVl' => $eligibleWithVl,
             'tx_curr'=>$txCurr,

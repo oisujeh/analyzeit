@@ -253,6 +253,11 @@
                         data.tx_new_state_data,
                         data.tx_new_lga_drill_data);
 
+                    BuildDonut(
+                        "sexChart",
+                        "Patients Currently Receiving ART by sex within COP Year",
+                        data.tx_new_age_sex.tx_new_sex, ['#A3A8E2', '#494FA3']);
+
                 } else if (selectReports.val() == 'tx_new') {
                     $(".tx_new").html(response.tx_new);
                     $(".tx_facilites").html(response.facilities)
