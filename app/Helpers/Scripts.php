@@ -138,7 +138,7 @@ class Scripts
         `ip`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)
-            ->lga($data->lga)
+            ->lga($data->lgas)
             ->facilities($data->facilities)
             ->groupBy('ip')
             ->withoutGlobalScopes()
@@ -160,9 +160,10 @@ class Scripts
         state AS `drilldown`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)
-            ->lga($data->lga)
+            ->lga($data->lgas)
             ->facilities($data->facilities)
             ->groupBy('name')
+            ->orderBy('name', 'ASC')
             ->withoutGlobalScopes()
             ->get();
 
@@ -174,20 +175,20 @@ class Scripts
 
         $stateListBar = [];
         $stateList =  TreatmentPerformance::select(DB::raw("state AS `name`"))
-            ->state($data->states)->lga($data->lga)->facilities($data->facilities)
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
             ->groupBy('name')->withoutGlobalScopes()->get();
 
         $out = [];
         $out2 = [];
 
-        foreach ($stateList  as  $index1  => $state) {
-            $stateListBar[$index1]['name'] = $state->name;
-            $stateListBar[$index1]['id'] = $state->name;
+        foreach ($stateList  as  $index1  => $states) {
+            $stateListBar[$index1]['name'] = $states->name;
+            $stateListBar[$index1]['id'] = $states->name;
 
             $lgaList =  TreatmentPerformance::select(DB::raw(
                 " lga,lgaCode, CAST(COALESCE(SUM( $tx ),0)  AS UNSIGNED) as  'patients'"
-            ))
-                ->where(['state' => $state->name])
+            ))->lga($data->lgas)->facilities($data->facilities)
+                ->where(['state' => $states->name])
                 ->groupBy('lga')
                 ->groupBy('lgaCode')
                 ->get();
@@ -196,14 +197,14 @@ class Scripts
             $drillDownLga = [];
             $lgaListArray = [];
 
-            foreach ($lgaList as $index2 => $lga) {
-                $lgaArray['name'] = $lga->lga;
-                $lgaArray['y'] = $lga->patients;
-                $lgaArray['drilldown'] = $lga->lga;
+            foreach ($lgaList as $index2 => $lgas) {
+                $lgaArray['name'] = $lgas->lga;
+                $lgaArray['y'] = $lgas->patients;
+                $lgaArray['drilldown'] = $lgas->lga;
                 $drillDownLga[$index2] = $lgaArray;
 
-                $lgaListArray['lgaCode'] = $lga->lgaCode;
-                $lgaListArray['lga'] = $lga->lga;
+                $lgaListArray['lgaCode'] = $lgas->lgaCode;
+                $lgaListArray['lga'] = $lgas->lga;
                 array_push($out, $lgaListArray);
             }
             $stateListBar[$index1]["data"] = $drillDownLga;

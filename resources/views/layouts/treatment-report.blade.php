@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Treatment Dashboard</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -54,6 +55,7 @@
             </div>
         </header>
     @endif
+
 
 <!-- Page Content -->
     <main>
@@ -287,6 +289,13 @@
                         "State");
                 }
                 console.log(data);
+            }).fail(function(xhr) {
+                if (xhr.status === 401) {
+                    alert("Your Session has expired. Click ok to redirect to login page");
+                    window.location.reload();
+                } else {
+                    alert("There was an error fetching the data");
+                }
             });
             event.preventDefault();
         });

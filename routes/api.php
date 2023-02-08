@@ -22,12 +22,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/treatment-filter', function(Request $request){
-    if($request->selectedIndicator == 'pvls'){
-        return Helper::vLGraph($request,$request->selectedIndicator);
-    }else{
-        return Helper::treamentPerformance($request,$request->selectedIndicator);
+    error_log(print_r($request->all(), true));
+    if($request->selectIndicator == 'pvls'){
+        return Helper::vLGraph($request,$request->selectIndicator);
+    }else if($request->selectIndicator == 'tx_curr') {
+        return Helper::treamentPerformance($request,$request->selectIndicator);
+    }else if($request->selectIndicator == 'tx_new') {
+        return Helper::treamentPerformance($request,$request->selectIndicator);
     }
 })->name('treatment.filter');
+
 
 Route::get('/get-wiget/{id}', function($page){
     return View::make('monitoring.reports.'.$page);
