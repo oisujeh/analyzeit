@@ -30,6 +30,8 @@ Route::middleware([
 
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
+Route::get('/performance', [App\Http\Controllers\HomeController::class, 'performance'])->name('performance');
+
 Route::get('monitoring/treatment_dashboard', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
 
 Route::get('/reports/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');

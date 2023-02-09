@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TreatmentCurrent;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -65,5 +66,16 @@ class HomeController extends Controller
         return view('dashboard', compact('students','txcurrAge','studentsNew','txnewAge','performance'));
         //dd($data);
         //dd(json_encode($data));
+    }
+
+    public function showPerformance(Request $request): JsonResponse
+    {
+        $performance = DB::table('treatment_report')
+            ->select(DB::raw("*"))
+            ->orderBy('state', 'asc')
+            ->orderBy('lga', 'asc')
+            ->orderBy('facility_name', 'asc')
+            ->get();
+        return response()->json(['performance'=>$performance]);
     }
 }
