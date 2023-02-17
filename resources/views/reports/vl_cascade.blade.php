@@ -7,13 +7,13 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid sm:grid-cols-1 bg-white drop-shadow-md mt-4 text-md">
+            <div class="grid bg-white drop-shadow-md mt-4 text-md">
                 <div class="container mx-auto">
-                    <div class="flex flex-col">
+                    
                         <div class="w-full">
                             <div class="p-4 border-b border-gray-200 shadow">
                                 <!-- <table> -->
-                                <table id="emr-table" class="p-4 max-w-full w-full mx-auto myTables">
+                                <table class="p-4 table-automax-w-full w-full mx-auto">
 
                                     <thead>
                                     <tr class="text-md font-semibold text-center border-b-2 border-blue-500">
@@ -53,7 +53,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

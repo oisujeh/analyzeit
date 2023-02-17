@@ -4,12 +4,21 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
+    <Style>
+        
+    </Style>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class=" overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="col-span-1 bg-white drop-shadow-md">
+                            <div class="box-content">
+                                <div id="chart-container"></div>
+                            </div>
+                    </div>
+                    
+                    <!-- <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children currently receiving ART by Sex
                         </div>
@@ -17,11 +26,8 @@
                             <div class="chart" id="pie_chart">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-span-1 bg-white drop-shadow-md">
-                        <div class="box-heading ml-2 mt-2">
-                            Number of Adults and Children currently receiving ART by Age
-                        </div>
+                    </div> -->
+                    <div class="col-span-1 bg-white drop-shadow-md">                        
                         <div class="box-content">
                             <div class="chart" id="ageChart"></div>
                         </div>
@@ -40,6 +46,13 @@
                         </div>
                         <div class="box-content">
                             <div class="chart" id="newAgeChart"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-span-1 bg-white drop-shadow-md">
+                        <div class="box-content">
+                            <div id="chart-container"></div>
                         </div>
                     </div>
                 </div>
@@ -164,5 +177,45 @@
                 });
             });
         </script>
+        <script>
+$(function () {
+    Highcharts.chart('chart-container', {
+        chart: {
+            renderTo: 'chart-container',
+            type: 'variablepie'
+        },
+        title: {
+            text: 'Number of Adults and Children currently receiving ART'
+        },
+        tooltip: {
+            headerFormat: '',
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                'Tx_Curr: <b>{point.x}</b><br/>' +
+                'Male: <b>{point.y}</b><br/>' +
+                'Female: <b>{point.z}</b><br/>'
+        },
+        exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: [
+                                'viewFullscreen', 'separator', 'downloadPNG',
+                                'downloadSVG', 'downloadPDF', 'separator', 'downloadXLS'
+                            ]
+                        },
+                    },
+                    enabled: true,
+                },
+        series: [{
+            name: 'Browsers',
+            minPointSize: 10,
+            innerSize: '20%',
+            size: '80%',
+            zMin: 0,
+            data: {!! json_encode($tx_curr) !!}
+        }]
+    });
+});
+</script>
+
     @endsection
 </x-app-layout>
