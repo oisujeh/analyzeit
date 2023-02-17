@@ -62,10 +62,21 @@ class HomeController extends Controller
             ->orderBy('facility_name', 'asc')
             ->get();
 
+        
+        $tx_curr = DB::table('linelist_full_apin')
+            ->select(DB::raw('
+                state as name,
+                CAST(COALESCE(SUM(CurrentARTStatus_Pharmacy = "Active"), 0) as  UNSIGNED) AS x,
+                CAST(COALESCE(SUM(CurrentARTStatus_Pharmacy = "Active" and sex = "M"), 0) as  UNSIGNED) AS y,
+                CAST(COALESCE(SUM(CurrentARTStatus_Pharmacy = "Active" and sex = "F"), 0) as  UNSIGNED) AS z
+            '))
+            ->groupBy('name')
+            ->get();
 
-        return view('dashboard', compact('students','txcurrAge','studentsNew','txnewAge','performance'));
-        //dd($data);
-        //dd(json_encode($data));
+
+        return view('dashboard', compact('students','txcurrAge','studentsNew','txnewAge','performance','tx_curr'));
+        //dd($tx_curr);
+        //dd(json_encode($tx_curr));
     }
 
     public function showPerformance(Request $request): JsonResponse

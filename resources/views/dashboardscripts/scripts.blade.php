@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     $(document).ready(function() {
         var students =  <?php if (isset($students)) {
             echo json_encode($students);
@@ -89,7 +89,7 @@
         chart = new Highcharts.Chart(options);
 
     });
-</script>
+</script> -->
 <script>
     $(document).ready(function() {
         var txcurrAge =  <?php if (isset($txcurrAge)) {
@@ -101,7 +101,7 @@
                 type: 'pie',
             },
             title: {
-                text: ''
+                text: 'Number of Adults and Children currently receiving ART by Age'
             },
             tooltip: {
                 formatter: function() {
@@ -142,7 +142,7 @@
             series: [{
                 type:'pie',
                 name:'age_range',
-                size: '60%',
+                size: '80%',
                 innerSize: '50%',
                 showInLegend: true,
 
