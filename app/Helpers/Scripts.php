@@ -56,9 +56,9 @@ class Scripts
 
         return  [
             'today_lga_list' =>  $today_appointments_stats,
-            'missed_appointment_lga_list' =>  $missed_appointment_stats,
+            /*'missed_appointment_lga_list' =>  $missed_appointment_stats,*/
             'today_appointments_graph_drilldown' => self::plotGraphByLGA('today_appointments', $today_appointments_stats, $graphSql2),
-            'missed_appointment_graph_drilldown' => self::plotGraphByLGA('missed_appointment', $missed_appointment_stats, $graphSql2),
+            /*'missed_appointment_graph_drilldown' => self::plotGraphByLGA('missed_appointment', $missed_appointment_stats, $graphSql2),*/
         ];
     }
 

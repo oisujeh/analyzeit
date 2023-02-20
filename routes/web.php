@@ -34,6 +34,8 @@ Route::get('/performance', [App\Http\Controllers\HomeController::class, 'perform
 
 Route::get('monitoring/treatment_dashboard', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
 
+Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+
 Route::get('/reports/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
 

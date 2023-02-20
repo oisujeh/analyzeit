@@ -7,6 +7,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use App\Helpers\Scripts as Helper;
+use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\ArrayShape;
 
 class MonitoringController extends Controller
 {
@@ -16,5 +18,44 @@ class MonitoringController extends Controller
             'dashboardGraphs' => Helper::dashboardGraphs()
         ];*/
         return view('monitoring.treatment_dashboard');
+    }
+
+    public function appointmentDashboard(): Factory|View|Application
+    {
+        $todaysAppt = $this->dashboardScript("today_appointments");
+
+        $data = [
+            'dashboardGraphs' => Helper::dashboardGraphs(),
+            'today_appointments' => Helper::dashbordScript("today_appointments")
+        ];
+        return view('monitoring.appointment_dashboard',compact('data','todaysAppt'));
+    }
+
+    #[ArrayShape(['stats' => "mixed", 'list' => "mixed"])] public function dashboardScript($table): array
+    {
+
+        $StatsSql = "SELECT * FROM( SELECT
+        COUNT(`PepID`) total_Appointments,
+        SUM(IF(`phone_no` IS NOT NULL ,1,0)) total_Appointments_valid_no,
+        SUM(IF(`phone_no` IS NOT NULL && STATUS = 1 ,1,0)) total_sent,
+        SUM(IF(`phone_no` IS NOT NULL && STATUS = 0 ,1,0)) total_not_sent,
+        SUM(IF(`phone_no` IS NULL ,1,0)) total_appointments_invalid_no
+        FROM ".$table." ) as treatment_report ";
+        $stats = DB::select(DB::raw($StatsSql))[0];
+
+        $listSql = "lga,
+        facility_name,
+        COUNT(`PepID`) total_Appointments,
+        SUM(IF(`phone_no` IS NOT NULL ,1,0)) total_Appointments_valid_no,
+        SUM(IF(`phone_no` IS NOT NULL && STATUS = 1 ,1,0)) total_sent,
+        SUM(IF(`phone_no` IS NOT NULL && STATUS = 0 ,1,0)) total_not_sent,
+        SUM(IF(`phone_no` IS NULL ,1,0)) total_appointments_invalid_no";
+        $list =  DB::table($table)
+            ->select(DB::raw($listSql))
+            ->groupBy('lga','facility_name')
+            ->get();
+
+        return array('stats'=> $stats ,'list'=> $list);
+
     }
 }

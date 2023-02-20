@@ -20,6 +20,8 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^3.0.1",
+        "preline": "^1.7.0",
+        "tw-elements": "^1.0.0-beta1",
         "vue": "^3.2.36"
     }
 }

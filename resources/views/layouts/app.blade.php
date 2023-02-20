@@ -18,8 +18,8 @@
               type="text/css" />
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -68,6 +68,7 @@
         <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
         <script src="{{asset('highchart2.0/modules/highcharts-utils.js')}}" type="text/javascript"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="{{asset('./assets/vendor/preline/dist/preline.js')}}"></script>
         @yield('footer_scripts')
     </body>
 </html>
