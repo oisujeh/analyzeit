@@ -19,6 +19,6 @@ class ReportController extends Controller
                 'result_gt_999 as result_gt_999')
             ->orderBy('state','asc')
             ->get();
-        return view('reports.vl_cascade',compact('vlCascade'));
+        return view('reports/vl.vl_cascade',compact('vlCascade'));
     }
 }

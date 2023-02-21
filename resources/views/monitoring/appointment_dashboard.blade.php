@@ -201,8 +201,6 @@
                     'pdfHtml5'
                 ]
             });
-
-            /* new $.fn.dataTable.FixedHeader(table);*/
         </script>
         @parent
         <script type="text/javascript">
@@ -211,6 +209,8 @@
 
             var today_appointments_graph_drilldown = <?php echo json_encode($data[
             'dashboardGraphs']['today_appointments_graph_drilldown'])?>;
+
+            console.log(today_appointments_graph_drilldown);
 
             plotGraphsWithDrilldown(
                 "Today's appointments by State",

@@ -36,7 +36,7 @@
                                         {{ __('Treatment Dashboard') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
-                                    <x-jet-dropdown-link href="{{ route('treatment') }}" :active="request()->routeIs('treatment')">
+                                    <x-jet-dropdown-link href="{{ route('appointment') }}" :active="request()->routeIs('appointment')">
                                         {{ __('Appointment Dashboard') }}
                                     </x-jet-dropdown-link>
                                 </div>
@@ -182,23 +182,7 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-jet-responsive-nav-link>
-        </div>
 
-        <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('treatment') }}" :active="request()->routeIs('treatment')">
-                {{ __('Treatment Monitoring') }}
-            </x-jet-responsive-nav-link>
-        </div>
-
-        <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('treatment') }}" :active="request()->routeIs('treatment')">
-                {{ __('Appointment Dashboard') }}
-            </x-jet-responsive-nav-link>
-        </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
