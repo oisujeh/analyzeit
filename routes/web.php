@@ -38,4 +38,6 @@ Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringC
 
 Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
+Route::get('monitoring/pbs', [App\Http\Controllers\MonitoringController::class,'pbs'])->name('pbs');
+
 
