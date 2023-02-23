@@ -4,9 +4,6 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <Style>
-        
-    </Style>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -17,7 +14,7 @@
                                 <div id="chart-container"></div>
                             </div>
                     </div>
-                    
+
                     <!-- <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-heading ml-2 mt-2">
                             Number of Adults and Children currently receiving ART by Sex
@@ -27,7 +24,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="col-span-1 bg-white drop-shadow-md">                        
+                    <div class="col-span-1 bg-white drop-shadow-md">
                         <div class="box-content">
                             <div class="chart" id="ageChart"></div>
                         </div>
@@ -186,6 +183,8 @@ $(function () {
         },
         title: {
             text: 'Number of Adults and Children currently receiving ART'
+        },credits: {
+            enabled: false
         },
         tooltip: {
             headerFormat: '',

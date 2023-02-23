@@ -44,23 +44,16 @@ class Scripts
 
     public static function dashboardGraphs()
     {
-
-
         $graphSql  = " `state` AS 'name', COUNT(`PepID`) AS  'y', `state` AS 'drilldown' ";
         $graphSql2 = " `lga` as 'lga',count(pepid) as  'patients'";
-        $graphSql3 = " DAYNAME(next_appointment) as days, count(`pepid`) as patients";
-
         $today_appointments_stats = DB::table('today_appointments')->select(DB::raw($graphSql))->groupBy('state')->get();
-        $missed_appointment_stats =  DB::table('missed_appointment')->select(DB::raw($graphSql))->groupBy('state')->get();
-        $missed_appointment_days =  DB::table('missed_appointment')->select(DB::raw($graphSql3))->groupBy('days')->get();
 
         return  [
             'today_lga_list' =>  $today_appointments_stats,
-            'missed_appointment_lga_list' =>  $missed_appointment_stats,
             'today_appointments_graph_drilldown' => self::plotGraphByLGA('today_appointments', $today_appointments_stats, $graphSql2),
-            'missed_appointment_graph_drilldown' => self::plotGraphByLGA('missed_appointment', $missed_appointment_stats, $graphSql2),
         ];
     }
+
 
 
 
@@ -72,7 +65,6 @@ class Scripts
             $fac = [];
             $graphSqlDrilldown[$key1]['name'] = $data->name;
             $graphSqlDrilldown[$key1]['id'] = $data->name;
-            $graphSqlDrilldown[$key1]['url'] = $data->name;
             $drilldownData = [];
             $drilldownDataArray = [];
             $drilldown =  DB::table($tableName)->select(DB::raw($graphSql))
