@@ -40,4 +40,6 @@ Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::cla
 
 Route::get('monitoring/pbs', [App\Http\Controllers\MonitoringController::class,'pbs'])->name('pbs');
 
+Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
+
 

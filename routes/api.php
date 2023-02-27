@@ -25,18 +25,37 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/treatment-filter', function(Request $request){
     error_log(print_r($request->all(), true));
-    if($request->selectIndicator == 'pvls'){
-        return Helper::vLGraph($request,$request->selectIndicator);
-    }else if($request->selectIndicator == 'tx_curr') {
-        return Helper::treamentPerformance($request,$request->selectIndicator);
-    }else if($request->selectIndicator == 'tx_new') {
-        return Helper::treamentPerformance($request,$request->selectIndicator);
+    $selectIndicator = $request->selectIndicator;
+    switch($selectIndicator) {
+        case 'pvls':
+            return Helper::vLGraph($request, $selectIndicator);
+        case 'tx_curr':
+        case 'tx_new':
+            return Helper::treamentPerformance($request, $selectIndicator);
+        default:
+            // Handle unexpected selectIndicator value
+            return response()->json(['error' => 'Invalid selectIndicator value'], 400);
     }
 })->name('treatment.filter');
 
 
+
+Route::post('/quality-care', function(Request $request){
+    $selectIndicator = $request->selectIndicator;
+    return match ($selectIndicator) {
+        'regimen' => Helper::regimenGraph($request, $request->selectIndicator),
+        'ped_regimen' => Helper::pedregimenGraph($request, $selectIndicator),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
+})->name('quality.filter');
+
+
 Route::get('/get-wiget/{id}', function($page){
     return View::make('monitoring.reports.'.$page);
+});
+
+Route::get('/get-widget/{id}', function($page){
+    return View::make('monitoring.qoc.'.$page);
 });
 
 Route::get('/sendSMS', function(Request $request){

@@ -3,13 +3,12 @@
 namespace App\Helpers;
 
 use App\Models\TreatmentPerformance;
+use App\Models\QualPerformance;
 use App\Models\VLPerformance;
-use App\HTSPerformance;
 use Illuminate\Support\Facades\DB;
 
 class Scripts
 {
-
     public static function dashboardSummary()
     {
         $statsql = "
@@ -41,7 +40,6 @@ class Scripts
         return $list;
     }
 
-
     public static function dashboardGraphs()
     {
         $graphSql  = " `state` AS 'name', COUNT(`PepID`) AS  'y', `state` AS 'drilldown' ";
@@ -53,9 +51,6 @@ class Scripts
             'today_appointments_graph_drilldown' => self::plotGraphByLGA('today_appointments', $today_appointments_stats, $graphSql2),
         ];
     }
-
-
-
 
     public static function plotGraphByLGA($tableName, $lgaList, $graphSql)
     {
@@ -180,8 +175,6 @@ class Scripts
 
         return (!empty($list)) ?  $list : [];
     }
-
-
 
     public static function treamentPerformanceLgaGraph($data, $tx)
     {
@@ -313,46 +306,57 @@ class Scripts
         return (!empty($result)) ?  $result : [];
     }
 
-    public static function htsGraph($data)
+    public static function regimenGraph($data)
     {
-
-        $facilityList = HTSPerformance::select(DB::raw(
-            "FORMAT(COALESCE(COUNT(DISTINCT `state`),0),0) `states`,
-            CAST(COALESCE(SUM(hts_tst),0)  AS UNSIGNED) as `hts_tst`,
-            CAST(COALESCE(SUM(hts_tst_pos),0)  AS UNSIGNED) as `hts_tst_pos`,
-            state
-            "
-        ))
-            ->state($data->states)
-            ->groupBy('state')
-            // ->groupBy('eligibleWithVl')
-            // ->groupBy('eligible')
-            // ->groupBy('supressedVl')
-            // ->groupBy('active')
-            // ->groupBy('lgaCode')
-            // ->groupBy('facility_name')
+        $facilityList2 = QualPerformance::select("regimen as regimen", \DB::raw("COUNT('regimen') as count"))
+            ->where('artstatus','=','Active')
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->groupBy('regimen')
+            ->orderBy('count', 'desc')
             ->withoutGlobalScopes()
             ->get();
 
-        $state = [];
-        $hts_tst = [];
-        $hts_tst_pos = [];
-        $percentage_yield = [];
-        foreach ($facilityList as $index => $list) {
-            $state[$index] =  $list->state;
-            $hts_tst[$index] =  $list->hts_tst;
-            $hts_tst_pos[$index] =  $list->hts_tst_pos;
-            $percentage_yield[$index] =  round((($list->hts_tst_pos/$list->hts_tst)*100),2);
+        $regimen = [];
+        $count = [];
+        foreach ($facilityList2 as $index => $list) {
+            $regimen[$index] =  $list->regimen;
+            $count[$index] =  $list->count;
         }
 
         $result=[
-            'hts_performance' => (!empty($list)) ? (array) $list->getAttributes() : [],
-            'states'=>$state,
-            'hts_tst' => $hts_tst,
-            'hts_tst_pos'=>$hts_tst_pos,
-            'percentage_yield'=>$percentage_yield
+            'quality_care' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'regimen'=>$regimen,
+            'count' => $count
         ];
 
         return (!empty($result)) ?  $result : [];
     }
+
+    public static function pedregimenGraph($data)
+    {
+        $facilityList2 = QualPerformance::select("regimen as regimen", \DB::raw("COUNT('regimen') as count"))
+            ->where('artstatus','=','Active')
+            ->whereBetween('age', [0, 14])
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->groupBy('regimen')
+            ->orderBy('count', 'desc')
+            ->withoutGlobalScopes()
+            ->get();
+
+        $regimen = [];
+        $count = [];
+        foreach ($facilityList2 as $index => $list) {
+            $regimen[$index] =  $list->regimen;
+            $count[$index] =  $list->count;
+        }
+
+        $result=[
+            'quality_care' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'regimen'=>$regimen,
+            'count' => $count
+        ];
+
+        return (!empty($result)) ?  $result : [];
+    }
+
 }
