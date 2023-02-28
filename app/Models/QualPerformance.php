@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TreatmentPerformance extends Model
+class QualPerformance extends Model
 {
-    public $table = "treatment_table";
+    use HasFactory;
+    public $table = "regimen_report";
 
 
     protected $fillable = [ ];

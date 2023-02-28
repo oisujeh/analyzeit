@@ -95,4 +95,13 @@ class MonitoringController extends Controller
         //dd(json_encode($pbsList));
     }
 
+
+    public function regimenDashboard(): Factory|View|Application
+    {
+        /*$data = [
+            'dashboardGraphs' => Helper::dashboardGraphs()
+        ];*/
+        return view('monitoring.quality_of_care');
+    }
+
 }
