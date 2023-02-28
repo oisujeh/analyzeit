@@ -59,9 +59,24 @@
 
 <!-- Page Content -->
     <main>
+        <div class="flex items-center justify-center" id="loading" style="display:none">
+            <div class="inline-block h-8 w-8 animate-[spinner-grow_0.75s_linear_infinite] rounded-full bg-current align-[-0.125em]
+            text-primary opacity-0 motion-reduce:animate-[spinner-grow_1.5s_linear_infinite]" role="status">
+                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+            </div>
+            <div class="inline-block h-8 w-8 animate-[spinner-grow_0.75s_linear_infinite] rounded-full bg-current align-[-0.125em]
+            text-secondary opacity-0 motion-reduce:animate-[spinner-grow_1.5s_linear_infinite]" role="status">
+                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+            </div>
+            <div class="inline-block h-8 w-8 animate-[spinner-grow_0.75s_linear_infinite] rounded-full bg-current align-[-0.125em]
+            text-success opacity-0 motion-reduce:animate-[spinner-grow_1.5s_linear_infinite]" role="status">
+                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+            </div>
+        </div>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-12 gap-4">
+
                     <!--Start side bar -->
                     <div class="col-span-3 bg-white rounded p-4 drop-shadow-md">
                         <p class="text-sm font-medium">APPLY FILTERS BELOW TO LOAD DATA</p>
@@ -177,6 +192,7 @@
 </div>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="{{asset('assets/select2.js') }}"></script>
 <script src="{{asset('assets/filter.js')}}"></script>
@@ -195,6 +211,7 @@
 
     $(document).ready(function(){
         $("#filters").submit(function(event){
+            $('#loading').show();
             let selectReports = $('#selectIndicator');
 
             var state = [];
@@ -211,7 +228,6 @@
             $('#facility :selected').each(function(){
                 facility.push($(this).val());
             });
-
 
             var formData = $("#filters").serializeArray();
             formData.push({
@@ -240,7 +256,7 @@
                 encode: true,
             }).done(function(data){
                 var response = data.treatment_perfomance;
-                if (selectReports.val() == 'tx_curr') {
+                if (selectReports.val() === 'tx_curr') {
                     $(".tx_patient").html(response.active);
                     $(".tx_facilities").html(response.facilities);
                     $(".tx_states").html(response.states)
@@ -255,8 +271,13 @@
 
                     BuildDonut(
                         "sexChart",
-                        "Patients Currently Receiving ART by sex within COP Year",
-                        data.tx_new_age_sex.tx_new_sex, ['#A3A8E2', '#494FA3']);
+                        "Patients Currently Receiving ART by Sex",
+                        data.tx_curr_graph, ['#A3A8E2', '#494FA3']);
+
+                    BuildDonut(
+                        'ageChart',
+                        'Patients Newly Enrolled on ART By Age Group',
+                        data.tx_age_group_graph, ['#7A7802', '#959335', '#AFAE67', '#CAC99A']);
 
                 } else if (selectReports.val() == 'tx_new') {
                     $(".tx_new").html(response.tx_new);
@@ -301,6 +322,8 @@
                 } else {
                     alert("There was an error fetching the data");
                 }
+            }).always(function() {
+                $('#loading').hide();
             });
             event.preventDefault();
         });

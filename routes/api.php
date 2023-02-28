@@ -30,7 +30,6 @@ Route::post('/treatment-filter', function(Request $request){
         case 'pvls':
             return Helper::vLGraph($request, $selectIndicator);
         case 'tx_curr':
-        case 'tx_new':
             return Helper::treamentPerformance($request, $selectIndicator);
         default:
             // Handle unexpected selectIndicator value

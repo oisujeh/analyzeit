@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TreatmentPerformance extends Model
 {
-    public $table = "treatment_report";
+    public $table = "treatment_table";
 
 
     protected $fillable = [ ];
