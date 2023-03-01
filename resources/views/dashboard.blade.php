@@ -127,7 +127,7 @@
         <script src="http://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
         @include('dashboardscripts.scripts')
         <script>
-            var table = $('.myTables').DataTable({
+            $('.myTables').DataTable({
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [
@@ -138,9 +138,6 @@
                 ]
             });
 
-           /* new $.fn.dataTable.FixedHeader(table);*/
-        </script>
-        <script>
             $(document).ready(function(){
                 $('.myTables').DataTable({
                     "processing":true,

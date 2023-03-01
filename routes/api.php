@@ -23,14 +23,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/treatment-filter', function(Request $request){
+$end_date = '2022-12-01';
+$start_date ='2023-02-01';
+Route::post('/treatment-filter', function(Request $request) use ($start_date,$end_date) {
     error_log(print_r($request->all(), true));
     $selectIndicator = $request->selectIndicator;
     switch($selectIndicator) {
         case 'pvls':
             return Helper::vLGraph($request, $selectIndicator);
         case 'tx_curr':
-            return Helper::treamentPerformance($request, $selectIndicator);
+        case 'tx_new':
+            return Helper::treamentPerformance($request,$selectIndicator,$start_date,$end_date);
         default:
             // Handle unexpected selectIndicator value
             return response()->json(['error' => 'Invalid selectIndicator value'], 400);

@@ -10,7 +10,7 @@
             <div class=" overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="grid sm:grid-cols-1">
                     <div class="col-span-1 bg-white drop-shadow-md">
-                        <div class="box-content">
+                        <div class="box-content mt-4">
                             <div id="container"></div>
                         </div>
                     </div>
@@ -79,7 +79,10 @@
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'PBS'
+                        text: 'PBS',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
                     }
                 },
                 tooltip: {

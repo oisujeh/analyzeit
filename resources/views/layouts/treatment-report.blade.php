@@ -140,12 +140,12 @@
                             </div>
 
 
-<!--                            <div id="div1">
+                           <div id="div1" style="display: none;">
                                 <div class="col-span-6 sm:col-span-3 mt-5">
                                     <label for="cat" class="block text-sm text-gray-500">
                                         <i class="uil uil-schedule"></i> From Date
                                     </label>
-                                    <input type="date" name="from" id="cat1" class="mt-1 focus:ring-indigo-500
+                                    <input type="date" name="start_date" id="start_date" class="mt-1 focus:ring-indigo-500
                  w-full shadow-sm sm:text-sm border-gray-300
                 rounded-md"/>
                                 </div>
@@ -154,11 +154,11 @@
                                     <label for="cat" class="block text-sm text-gray-500">
                                         <i class="uil uil-schedule"></i> To Date
                                     </label>
-                                    <input type="date" name="to" id="cat2" class="mt-1 focus:ring-indigo-500
+                                    <input type="date" name="end_date" id="end_date" class="mt-1 focus:ring-indigo-500
                 block w-full shadow-sm sm:text-sm border-gray-300
                 rounded-md"/>
                                 </div>
-                            </div>-->
+                            </div>
 
 
                             <div class="col-span-6 sm:col-span-3 mt-5 text-left">
@@ -201,6 +201,17 @@
     var baseUrlApi = '<?php echo URL::to('/api').'/';?>';
     var baseUrlWiget = '<?php echo URL::to('/api').'/get-wiget/';?>';
 
+    const dropdown = document.getElementById("selectIndicator");
+    const divToShow = document.getElementById("div1");
+
+    dropdown.addEventListener("change", function() {
+        if (dropdown.value === "tx_new") {
+            divToShow.style.display = "block";
+        } else {
+            divToShow.style.display = "none";
+        }
+    });
+
     let uri = baseUrlWiget+'tx_curr';
     $('#report_containner').load(uri);
 
@@ -241,6 +252,7 @@
                 value: facility
             });
             $(".tx_curr").html('...')
+            $(".tx_new").html('...')
             $(".tx_facilities").html('...')
             $(".tx_states").html('...')
             $(".tx_lgas").html('...')
@@ -279,18 +291,18 @@
                         'Patients Newly Enrolled on ART By Age Group',
                         data.tx_age_group_graph, ['#7A7802', '#959335', '#AFAE67', '#CAC99A']);
 
-                } else if (selectReports.val() == 'tx_new') {
-                    $(".tx_new").html(response.tx_new);
+                } else if (selectReports.val() === 'tx_new') {
+                    $(".tx_new").html(response.new);
                     $(".tx_facilites").html(response.facilities)
                     $(".tx_states").html(response.states)
                     $(".tx_lgas").html(response.lga)
 
                     build_drilldown_bar_chart(
-                        'drilldownBar',
+                        'newdrilldownBar',
                         'Patients Newly Enrolled on ART by Location',
                         'Number of Patients',
-                        data.tx_new_state_data,
-                        data.tx_new_lga_drill_data);
+                        data.new_state_data,
+                        data.new_lga_drill_data);
 
                 } else if (selectReports.val() == 'pvls') {
 
