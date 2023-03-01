@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Helpers\Scripts as Helper;
+use App\Helpers\Treatment_new as Helper1;
 use Illuminate\Support\Facades\View;
 
 
@@ -23,22 +24,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-$end_date = '2022-12-01';
-$start_date ='2023-02-01';
-Route::post('/treatment-filter', function(Request $request) use ($start_date,$end_date) {
+Route::post('/treatment-filter', function(Request $request) {
     error_log(print_r($request->all(), true));
     $selectIndicator = $request->selectIndicator;
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
     switch($selectIndicator) {
         case 'pvls':
             return Helper::vLGraph($request, $selectIndicator);
         case 'tx_curr':
-        case 'tx_new':
             return Helper::treamentPerformance($request,$selectIndicator,$start_date,$end_date);
+        case 'tx_new':
+            return Helper1::treament_new_Performance($request,$selectIndicator,$start_date,$end_date);
         default:
             // Handle unexpected selectIndicator value
             return response()->json(['error' => 'Invalid selectIndicator value'], 400);
     }
 })->name('treatment.filter');
+
 
 
 
