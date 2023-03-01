@@ -9,18 +9,12 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
-    <link href=" https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css" rel="stylesheet"
-          type="text/css" />
-    <link href="https://cdn.datatables.net/fixedheader/3.1.8/css/fixedHeader.bootstrap.min.css" rel="stylesheet"
-          type="text/css" />
-    <link href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap.min.css" rel="stylesheet"
-          type="text/css" />
-    <link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" rel="stylesheet"
-          type="text/css" />
+    <link href=" https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/fixedheader/3.1.8/css/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
 
@@ -92,7 +86,7 @@
                                 <select id="selectIndicator" name="selectIndicator" class="select2 mt-1 block w-full py-2 px-3
                                 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
                                 focus:border-indigo-500 sm:text-sm">
-                                    <option value="" disabled selected hidden>Choose ...</option>
+                                    <option value="" disabled selected></option>
                                     <option value="tx_new">Treatment New</option>
                                     <option value="tx_curr">Treatment Current</option>
                                     <option value="pvls">Treatment PVLS</option>
@@ -212,8 +206,7 @@
         }
     });
 
-    let uri = baseUrlWiget+'tx_curr';
-    $('#report_containner').load(uri);
+    $('#report_containner').load(baseUrlWiget);
 
     $(".e2").select2({
         placeholder: "Choose...",
@@ -304,7 +297,7 @@
                         data.new_state_data,
                         data.new_lga_drill_data);
 
-                } else if (selectReports.val() == 'pvls') {
+                } else if (selectReports.val() === 'pvls') {
 
                     $(".tx_curr").html(Number(response.active).toLocaleString())
                     $(".tx_eligible").html(Number(response.eligible).toLocaleString())

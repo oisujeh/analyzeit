@@ -66,7 +66,7 @@
 
                                         <thead>
                                         <tr>
-                                            <th class="text-left">State</th>
+                                            <th>State</th>
                                             <th>LGA</th>
                                             <th>Facility Name</th>
                                             <th>Datim code</th>
@@ -77,7 +77,6 @@
                                             <th>Dead</th>
                                             <th>Stopped</th>
                                             <th>PBS</th>
-                                            <th>TX NEW</th>
                                             <th>EMR Last Date</th>
                                         </tr>
                                         </thead>
@@ -85,19 +84,18 @@
                                     <tbody>
                                     @foreach($performance as $list)
                                         <tr class="hover:bg-gray-200 font-medium">
-                                            <td class="w-150 px-4 py-2 border">{{$list->state}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->lga}}</td>
-                                            <td class="w-100 px-4 py-2 border">{{ Illuminate\Support\Str::limit($list->facility_name, 50, $end='...') }}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->datim_code}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->total_patients}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->active}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->ltfu}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->transferred_out}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->dead}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->stopped}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->pbs}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->tx_new}}</td>
-                                            <td class="w-150 px-4 py-2 border">{{$list->emr_date}}</td>
+                                            <td>{{$list->state}}</td>
+                                            <td>{{$list->lga}}</td>
+                                            <td>{{ Illuminate\Support\Str::limit($list->facility_name, 50, $end='...') }}</td>
+                                            <td>{{$list->datim_code}}</td>
+                                            <td>{{$list->total_patients}}</td>
+                                            <td>{{$list->active}}</td>
+                                            <td>{{$list->ltfu}}</td>
+                                            <td>{{$list->transferred_out}}</td>
+                                            <td>{{$list->dead}}</td>
+                                            <td>{{$list->stopped}}</td>
+                                            <td>{{$list->pbs}}</td>
+                                            <td>{{$list->emr_date}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -127,7 +125,7 @@
         <script src="http://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
         @include('dashboardscripts.scripts')
         <script>
-            $('.myTables').DataTable({
+            $('#emr-table').DataTable({
                 responsive: true,
                 dom: 'Bfrtip',
                 buttons: [

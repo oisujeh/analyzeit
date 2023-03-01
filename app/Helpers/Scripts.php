@@ -52,7 +52,7 @@ class Scripts
         ];
     }
 
-    public static function plotGraphByLGA($tableName, $lgaList, $graphSql)
+    public static function plotGraphByLGA($tableName, $lgaList, $graphSql): array
     {
         $graphSqlDrilldown = [];
         foreach ($lgaList  as $key1  => $data) {
@@ -80,7 +80,7 @@ class Scripts
         return  $graphSqlDrilldown;
     }
 
-    public static function dashbordScript($table)
+    public static function dashbordScript($table): array
     {
 
         $StatsSql = "SELECT * FROM( SELECT
@@ -146,7 +146,7 @@ class Scripts
             FORMAT(COALESCE(COUNT(DISTINCT `lga`),0),0) AS `lga`,
             FORMAT(COALESCE(COUNT(DISTINCT `datim_code`),0),0) AS `facilities`,
             COUNT(`pepid`) AS `total_patients`,
-            COALESCE(SUM(`TI` =  'No' AND `ARTStartDate` BETWEEN ? AND ?),0) AS `new`,
+
             COALESCE(SUM(`PBS` = 'Yes'),0) AS pbs,
             COALESCE(SUM(`CurrentARTStatus` = 'Active'),0) AS `active`,
             COALESCE(SUM(`Outcomes` LIKE '%Transferred%' AND  `CurrentARTStatus` NOT LIKE '%Active%'),0) AS transferred_out,
@@ -156,8 +156,6 @@ class Scripts
             MAX(DATE(`Pharmacy_LastPickupdate`)) AS emr_date,
             `ip`
 	    ";
-        $start_date = $data->start_date ?? '';
-        $end_date = $data->end_date ?? '';
         $list =  TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)
             ->lga($data->lgas)
@@ -244,7 +242,7 @@ class Scripts
         state AS `drilldown`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
             ->where('TI','=','No')
-            ->whereBetween('ARTStartDate', [$end_date,$start_date])
+            ->whereBetween('ARTStartDate', [$start_date,$end_date])
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
@@ -371,7 +369,7 @@ class Scripts
             ))->lga($data->lgas)->facilities($data->facilities)
                 ->where(['state' => $states->name])
                 ->where('TI','=','No')
-                ->whereBetween('ARTStartDate', [$end_date,$start_date])
+                ->whereBetween('ARTStartDate', [$start_date,$end_date])
                 ->groupBy('lga')
                 ->groupBy('lgaCode')
                 ->get();
@@ -397,7 +395,7 @@ class Scripts
             "lga, lgaCode,facility_name , Count(pepid) as  'patients'"
         ))->lga($data->lgas)->facilities($data->facilities)
             ->where('TI','=','No')
-            ->whereBetween('ARTStartDate', [$end_date,$start_date])
+            ->whereBetween('ARTStartDate', [$start_date,$end_date])
             ->groupBy('lga')
             ->groupBy('lgaCode')
             ->groupBy('facility_name')
