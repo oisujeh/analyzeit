@@ -79,7 +79,7 @@
                                 focus:border-indigo-500 sm:text-sm">
                                     <option value="" disabled selected></option>
                                     <option value="regimen">Regimen Analysis</option>
-                                    <option value="ped_regimen">Paedatric Regimen Analysis</option>
+                                    <option value="ped_regimen">Paediatric Regimen Analysis</option>
                                 </select>
                             </div>
 

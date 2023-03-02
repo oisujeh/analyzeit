@@ -393,6 +393,11 @@ function plotMapAdvanced(container_id, selectedIdicator, state_chart_container_i
 function build_Line_chart(id, title, yaxistitle, xaxisCategory, data, average_value, series_name, xaxistitle) {
     var colors = get_color_shades(2);
 
+    if (!data || data.length === 0) {
+        console.error('Data array is null or empty.');
+        return;
+    }
+
     var hasThousand = data.some(x => Math.abs(x) >= 1000);
 
     if (hasThousand) {

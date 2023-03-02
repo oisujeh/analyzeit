@@ -8,7 +8,7 @@
     <div class="col-span-1 bg-white drop-shadow-md rounded p-4 text-center">
         <div class="text-red-500 ">
             <p class="text-xl"><i class="uil uil-hospital"></i> FACILITIES</p>
-            <p class="tx_facilities">...</p>
+            <p class="tx_facility">...</p>
         </div>
     </div>
     <div class="col-span-1 bg-white drop-shadow-md rounded p-4 text-center">
@@ -33,6 +33,18 @@
         </div>
         <div class="box-content">
             <div class="chart" id="newdrilldownBar">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 mt-6">
+    <div class="col-span-1 bg-white drop-shadow-md">
+        <div class="box-heading ml-2 mt-2 font-bold text-sm">
+            Patients Currently Receiving ART by location
+        </div>
+        <div class="box-content">
+            <div class="chart" id="initiationTrend">
             </div>
         </div>
     </div>

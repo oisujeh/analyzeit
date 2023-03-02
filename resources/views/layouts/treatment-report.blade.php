@@ -32,6 +32,7 @@
     <script src="{{asset('code/modules/accessibility.js')}}"></script>
     <script src="{{asset('code/modules/drilldown.js')}}"></script>
     <script src="{{asset('assets/highcharts-utils.js')}}"></script>
+    <script src="{{asset('assets/highcharts-export-clientside.js')}}"></script>
 
 
 </head>
@@ -72,7 +73,7 @@
                 <div class="grid grid-cols-12 gap-4">
 
                     <!--Start side bar -->
-                    <div class="col-span-3 bg-white rounded p-4 drop-shadow-md">
+                    <div class="col-span-3 rounded p-4 drop-shadow-md">
                         <p class="text-sm font-medium">APPLY FILTERS BELOW TO LOAD DATA</p>
 
                         <!--begin::Form-->
@@ -114,11 +115,10 @@
                                 <label for="lga" class="block text-sm text-gray-500 mt-5">
                                     <i class="uil uil-map-pin-alt"></i> LGAs
                                 </label>
-                                <select id="lga" name="lga" class="e2 select2 mt-1 block w-full h-4 py-2 px-3 border
-            border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-            focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
+                                <select id="lga" name="lga" class="e2 select2 mt-1 block w-full h-4 py-2 px-3 border border-gray-300
+                                bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
+                                sm:text-sm" data-toggle="select2" multiple="multiple">
                                     <option value="">Choose ...</option>
-
                                 </select>
                             </div>
 
@@ -126,10 +126,9 @@
                                 <label for="facility" class="block text-sm text-gray-500 mt-5">
                                     <i class="uil uil-box"></i> Facilities
                                 </label>
-                                <select id="facility" name="facility" class="e2 select2 select2-selection--multiple mt-1 block w-full py-2 px-3 border
-            border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
-            focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
-
+                                <select id="facility" name="facility" class="e2 select2 select2-selection--multiple mt-1
+                                block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none
+                                focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
                                 </select>
                             </div>
 
@@ -205,6 +204,18 @@
             divToShow.style.display = "none";
         }
     });
+
+    var today = new Date().toISOString().slice(0, 10);
+    // Set the value of the date field to the current date
+    document.getElementById("end_date").value = today;
+
+    var month = new Date();
+    // Set the day of the date object to 1
+    month.setDate(1);
+
+    // Get the date in YYYY-MM-DD format
+    var firstDayOfMonth = month.toISOString().slice(0, 10);
+    document.getElementById("start_date").value = firstDayOfMonth;
 
     $('#report_containner').load(baseUrlWiget);
 
@@ -284,11 +295,41 @@
                         'Patients Newly Enrolled on ART By Age Group',
                         data.tx_age_group_graph, ['#7A7802', '#959335', '#AFAE67', '#CAC99A']);
 
+                    var age_group_categories = [
+                        '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+'
+                    ];
+
+                    var tx_new_series = [
+                        {
+                            name: 'Male',
+                            data: data.tx_new_age_sex.male_data,
+                            color: '#A3A8E2'
+                        }, {
+                            name: 'Female',
+                            data: data.tx_new_age_sex.female_data,
+                            color: '#494FA3'
+                        }
+                    ];
+
+
+                    var male_max = Math.abs(Math.min.apply(Math, data.tx_new_age_sex.male_data));
+                    var female_max = Math.abs(Math.max.apply(Math, data.tx_new_age_sex.female_data));
+                    var max = female_max > male_max ? female_max : male_max;
+
+                    Build_Pos_Neg_Chart(
+                        'ageSexChart',
+                        'Patients Currently Receiving ART by Age and Sex within COP Year',
+                        age_group_categories,
+                        tx_new_series,
+                        max);
+
+
                 } else if (selectReports.val() === 'tx_new') {
                     $(".tx_new").html(response.new);
-                    $(".tx_facilites").html(response.facilities)
+                    $(".tx_facility").html(response.facility)
                     $(".tx_states").html(response.states)
                     $(".tx_lgas").html(response.lga)
+
 
                     build_drilldown_bar_chart(
                         'newdrilldownBar',
@@ -296,6 +337,16 @@
                         'Number of Patients',
                         data.new_state_data,
                         data.new_lga_drill_data);
+
+                    build_Line_chart(
+                        'initiationTrend',
+                        null,
+                        'Number of Patients',
+                        data.tx_trends_data.tx_new_trend_months,
+                        data.tx_trends_data.tx_new_trend_data,
+                        null,
+                        "Number of Patients",
+                        "Month");
 
                 } else if (selectReports.val() === 'pvls') {
 
