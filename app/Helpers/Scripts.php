@@ -106,47 +106,14 @@ class Scripts
         return array('stats' => $stats, 'list' => $list);
     }
 
-    #TX  Graphs
-//    public static function treamentPerformance($data, $tx = 'tx_curr')
-//    {
-//        $tx = ($tx == 'tx_curr') ? 'active' : 'tx_new';
-//        $statsql = "
-//        FORMAT(COALESCE(COUNT(DISTINCT `state`),0),0) `states`,
-//        FORMAT(COALESCE(COUNT(DISTINCT `lga`),0),0) `lga`,
-//        FORMAT(COALESCE(COUNT(DISTINCT `datim_code`),0),0) `facilities`,
-//        FORMAT(COALESCE(SUM(`total_patients`),0),0) `total_patients`,
-//        FORMAT(COALESCE(SUM(`tx_new`),0),0) tx_new,
-//        FORMAT(COALESCE(SUM(`pbs`),0),0) pbs,
-//        FORMAT(COALESCE(SUM(`active`),0),0) active,
-//        FORMAT(COALESCE(SUM(`transferred_out`),0),0) transferred_out,
-//        FORMAT(COALESCE(SUM(`dead`),0),0) dead,
-//        FORMAT(COALESCE(SUM(`stopped`),0),0) stopped,
-//        FORMAT(COALESCE(SUM(`ltfu`),0),0) `ltfu`,
-//        `ip`";
-//        $list =  TreatmentPerformance::select(DB::raw($statsql))
-//            ->state($data->states)
-//            ->lga($data->lgas)
-//            ->facilities($data->facilities)
-//            ->groupBy('ip')
-//            ->withoutGlobalScopes()
-//            ->first();
-//        $response = [
-//            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
-//            'tx_curr_graph' => self::txCurrGraph($data, $tx),
-//            'tx_new_state_data' => self::treamentPerformanceStateGraph($data, $tx),
-//            'tx_new_lga_drill_data' => self::treamentPerformanceLgaGraph($data, $tx)
-//        ];
-//        return $response;
-//    }
 
-    public static function treamentPerformance($data, $tx, $start_date,$end_date)
+    public static function treamentPerformance($data, $tx): array
     {
         $statsql = "
             FORMAT(COALESCE(COUNT(DISTINCT `state`),0),0) AS `states`,
             FORMAT(COALESCE(COUNT(DISTINCT `lga`),0),0) AS `lga`,
             FORMAT(COALESCE(COUNT(DISTINCT `datim_code`),0),0) AS `facilities`,
             COUNT(`pepid`) AS `total_patients`,
-
             COALESCE(SUM(`PBS` = 'Yes'),0) AS pbs,
             COALESCE(SUM(`CurrentARTStatus` = 'Active'),0) AS `active`,
             COALESCE(SUM(`Outcomes` LIKE '%Transferred%' AND  `CurrentARTStatus` NOT LIKE '%Active%'),0) AS transferred_out,
@@ -170,8 +137,7 @@ class Scripts
             'tx_age_group_graph' => self::ageGroup($data, $tx),
             'tx_new_state_data' => self::treamentPerformanceStateGraph($data,$tx),
             'tx_new_lga_drill_data' => self::treamentPerformanceLgaGraph($data,$tx),
-            'new_state_data' => self::newPerformanceStateGraph($data,$tx, $start_date, $end_date),
-            'new_lga_drill_data' => self::newPerformanceLgaGraph($data, $tx, $start_date, $end_date)
+            'tx_new_age_sex' => self::tx_age_sex($data)
         ];
         return $response;
     }
@@ -233,47 +199,6 @@ class Scripts
         return (!empty($list)) ?  $list : [];
     }
 
-    public static function newPerformanceStateGraph($data, $tx, $start_date, $end_date)
-    {
-
-        $statsql = "
-        state AS `name`,
-        Count(pepid) AS `y`,
-        state AS `drilldown`";
-        $list =  TreatmentPerformance::select(DB::raw($statsql))
-            ->where('TI','=','No')
-            ->whereBetween('ARTStartDate', [$start_date,$end_date])
-            ->state($data->states)
-            ->lga($data->lgas)
-            ->facilities($data->facilities)
-            ->groupBy('name')
-            ->orderBy('name', 'ASC')
-            ->withoutGlobalScopes()
-            ->get();
-
-        return (!empty($list)) ?  $list : [];
-    }
-
-
-
-    public static function treamentPerformanceAgeGraph($data, $tx)
-    {
-
-        $statsql = "
-        state AS `name`,
-        CAST(COALESCE(SUM($tx),0)  AS UNSIGNED) AS `y`,
-        state AS `drilldown`";
-        $list =  TreatmentPerformance::select(DB::raw($statsql))
-            ->state($data->states)
-            ->lga($data->lgas)
-            ->facilities($data->facilities)
-            ->groupBy('name')
-            ->orderBy('name', 'ASC')
-            ->withoutGlobalScopes()
-            ->get();
-
-        return (!empty($list)) ?  $list : [];
-    }
 
     public static function treamentPerformanceLgaGraph($data,$tx)
     {
@@ -318,84 +243,6 @@ class Scripts
         $facilityList =  TreatmentPerformance::select(DB::raw(
             "lga, lgaCode,facility_name , CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) as  'patients'"
         ))->lga($data->lgas)->facilities($data->facilities)
-            ->groupBy('lga')
-            ->groupBy('lgaCode')
-            ->groupBy('facility_name')
-            ->withoutGlobalScopes()
-            ->get();
-
-
-        foreach ($out as $index => $lga) {
-            $out2[$index]['name'] = $lga['lga'];
-            $out2[$index]['id'] = $lga['lga'];
-            $fac = [];
-            $facElement = [];
-            $i = 0;
-            foreach ($facilityList as $key => $facility) {
-
-                if ($facility->lgaCode == $lga['lgaCode']) {
-                    $facElement[0] = $facility->facility_name;
-                    $facElement[1] = $facility->patients;
-                    $fac[$i] =  $facElement;
-                    $i++;
-                }
-            }
-            $out2[$index]['data'] = $fac;
-        }
-
-        foreach ($out2 as $index => $list) {
-            array_push($stateListBar, $list);
-        }
-        return (!empty($stateListBar)) ?  $stateListBar   : [];
-    }
-
-    public static function newPerformanceLgaGraph($data,$tx, $start_date, $end_date)
-    {
-
-        $stateListBar = [];
-        $stateList =  TreatmentPerformance::select(DB::raw("state AS `name`"))
-            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
-            ->groupBy('name')->withoutGlobalScopes()->get();
-
-        $out = [];
-        $out2 = [];
-
-        foreach ($stateList  as  $index1  => $states) {
-            $stateListBar[$index1]['name'] = $states->name;
-            $stateListBar[$index1]['id'] = $states->name;
-
-            $lgaList =  TreatmentPerformance::select(DB::raw(
-                " lga,lgaCode, Count(pepid) as  'patients'"
-            ))->lga($data->lgas)->facilities($data->facilities)
-                ->where(['state' => $states->name])
-                ->where('TI','=','No')
-                ->whereBetween('ARTStartDate', [$start_date,$end_date])
-                ->groupBy('lga')
-                ->groupBy('lgaCode')
-                ->get();
-
-            $lgaArray = [];
-            $drillDownLga = [];
-            $lgaListArray = [];
-
-            foreach ($lgaList as $index2 => $lgas) {
-                $lgaArray['name'] = $lgas->lga;
-                $lgaArray['y'] = $lgas->patients;
-                $lgaArray['drilldown'] = $lgas->lga;
-                $drillDownLga[$index2] = $lgaArray;
-
-                $lgaListArray['lgaCode'] = $lgas->lgaCode;
-                $lgaListArray['lga'] = $lgas->lga;
-                array_push($out, $lgaListArray);
-            }
-            $stateListBar[$index1]["data"] = $drillDownLga;
-        }
-
-        $facilityList =  TreatmentPerformance::select(DB::raw(
-            "lga, lgaCode,facility_name , Count(pepid) as  'patients'"
-        ))->lga($data->lgas)->facilities($data->facilities)
-            ->where('TI','=','No')
-            ->whereBetween('ARTStartDate', [$start_date,$end_date])
             ->groupBy('lga')
             ->groupBy('lgaCode')
             ->groupBy('facility_name')
@@ -483,7 +330,7 @@ class Scripts
         return (!empty($result)) ?  $result : [];
     }
 
-    public static function regimenGraph($data)
+    public static function regimenGraph($data): array
     {
         $facilityList2 = QualPerformance::select("regimen as regimen", \DB::raw("COUNT('regimen') as count"))
             ->where('artstatus','=','Active')
@@ -509,7 +356,7 @@ class Scripts
         return (!empty($result)) ?  $result : [];
     }
 
-    public static function pedregimenGraph($data)
+    public static function pedregimenGraph($data): array
     {
         $facilityList2 = QualPerformance::select("regimen as regimen", \DB::raw("COUNT('regimen') as count"))
             ->where('artstatus','=','Active')
@@ -531,6 +378,52 @@ class Scripts
             'quality_care' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'regimen'=>$regimen,
             'count' => $count
+        ];
+
+        return (!empty($result)) ?  $result : [];
+    }
+
+    public static function tx_age_sex($data): array
+    {
+
+        $statsql = "
+        CASE
+            WHEN age < 1 THEN '<1'
+            WHEN age BETWEEN 1 AND 4 THEN '1-4'
+            WHEN age BETWEEN 5 AND 9 THEN '5-9'
+            WHEN age BETWEEN 10 AND 14 THEN '10-14'
+            WHEN age BETWEEN 15 AND 19 THEN '15-19'
+            WHEN age BETWEEN 20 AND 24 THEN '20-24'
+            WHEN age BETWEEN 25 AND 29 THEN '25-29'
+            WHEN age BETWEEN 30 AND 34 THEN '30-34'
+            WHEN age BETWEEN 35 AND 39 THEN '35-39'
+            WHEN age BETWEEN 40 AND 44 THEN '40-44'
+            WHEN age BETWEEN 45 AND 49 THEN '45-49'
+            WHEN age >= 50 THEN '50+'
+        END AS age_range,
+        CAST(SUM(CASE WHEN sex = 'M' THEN -1 ELSE 0 END) as signed) AS male_count,
+        CAST(SUM(CASE WHEN sex = 'F' THEN 1 ELSE 0 END) as unsigned) AS female_count
+        ";
+
+        $txAgeSex= TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->where('CurrentArtStatus','=','Active')
+            ->groupBy('age_range')
+            ->orderByRaw("FIELD(age_range, '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+')")
+            ->withoutGlobalScopes()
+            ->get();
+
+        $male_count = [];
+        $female_count = [];
+        foreach ($txAgeSex as $index => $list) {
+            $male_count[$index] =  $list->male_count;
+            $female_count[$index] =  $list->female_count;
+        }
+
+        $result=[
+            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'male_data'=>$male_count,
+            'female_data' => $female_count
         ];
 
         return (!empty($result)) ?  $result : [];

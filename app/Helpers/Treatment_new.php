@@ -9,40 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class Treatment_new
 {
-    public static function plotGraphByLGA($tableName, $lgaList, $graphSql): array
-    {
-        $graphSqlDrilldown = [];
-        foreach ($lgaList  as $key1  => $data) {
-            $dataD = [];
-            $fac = [];
-            $graphSqlDrilldown[$key1]['name'] = $data->name;
-            $graphSqlDrilldown[$key1]['id'] = $data->name;
-            $drilldownData = [];
-            $drilldownDataArray = [];
-            $drilldown =  DB::table($tableName)->select(DB::raw($graphSql))
-                ->where(['state' => $data->name])
-                ->groupBy('state')
-                ->groupBy('lga')
-                //->groupBy('facility')
-                //->groupBy('fac_id')
-                ->get();
 
-            foreach ($drilldown as $key => $data) {
-                $drilldownData[0] = $data->lga;
-                $drilldownData[1] = $data->patients;
-                $drilldownDataArray[] = $drilldownData;
-            }
-            $graphSqlDrilldown[$key1]["data"] = $drilldownDataArray;
-        }
-        return  $graphSqlDrilldown;
-    }
-
-    public static function treament_new_Performance($data, $tx, $start_date,$end_date)
+    public static function treament_new_Performance($data, $tx, $start_date,$end_date): array
     {
         $statsql = "
-            FORMAT(COALESCE(COUNT(DISTINCT `state`),0),0) AS `states`,
-            FORMAT(COALESCE(COUNT(DISTINCT `lga`),0),0) AS `lga`,
-            FORMAT(COALESCE(COUNT(DISTINCT `datim_code`),0),0) AS `facilities`,
+            FORMAT(COALESCE(COUNT(DISTINCT CASE WHEN `ARTStartDate` BETWEEN '$start_date' AND '$end_date' AND `TI` =  'No' THEN `state` END),0),0) AS `states`,
+            FORMAT(COALESCE(COUNT(DISTINCT CASE WHEN `ARTStartDate` BETWEEN '$start_date' AND '$end_date' AND `TI` =  'No' THEN `lga` END),0),0) AS `lga`,
+            FORMAT(COALESCE(COUNT(DISTINCT CASE WHEN `ARTStartDate` BETWEEN '$start_date' AND '$end_date' AND `TI` =  'No' THEN `datim_code` END),0),0) AS `facility`,
             COALESCE(SUM(`TI` =  'No' AND `ARTStartDate` BETWEEN '$start_date' AND '$end_date'),0) AS `new`,
             `ip`
 	    ";
@@ -54,12 +27,12 @@ class Treatment_new
             ->withoutGlobalScopes()
             ->first();
 
-        $response = [
+        return [
             'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'new_state_data' => self::newPerformanceStateGraph($data,$tx, $start_date, $end_date),
-            'new_lga_drill_data' => self::newPerformanceLgaGraph($data, $tx, $start_date, $end_date)
+            'new_lga_drill_data' => self::newPerformanceLgaGraph($data, $tx, $start_date, $end_date),
+            'tx_trends_data' => self::tx_new_trend($data),
         ];
-        return $response;
     }
 
     public static function newPerformanceStateGraph($data, $tx, $start_date, $end_date)
@@ -82,7 +55,7 @@ class Treatment_new
         return (!empty($list)) ?  $list : [];
     }
 
-    public static function newPerformanceLgaGraph($data,$tx, $start_date, $end_date)
+    public static function newPerformanceLgaGraph($data,$tx, $start_date, $end_date): array
     {
 
         $stateListBar = [];
@@ -119,7 +92,7 @@ class Treatment_new
 
                 $lgaListArray['lgaCode'] = $lgas->lgaCode;
                 $lgaListArray['lga'] = $lgas->lga;
-                array_push($out, $lgaListArray);
+                $out[] = $lgaListArray;
             }
             $stateListBar[$index1]["data"] = $drillDownLga;
         }
@@ -155,9 +128,44 @@ class Treatment_new
         }
 
         foreach ($out2 as $index => $list) {
-            array_push($stateListBar, $list);
+            $stateListBar[] = $list;
         }
         return (!empty($stateListBar)) ?  $stateListBar   : [];
+    }
+
+
+
+    public static function tx_new_trend($data): array
+    {
+
+        $statsql = "
+        COUNT(pepid) as enrollments,
+        DATE_FORMAT(ARTStartDate, '%b %y') as month_year
+        ";
+
+        $facilityList2 = TreatmentPerformance::select(DB::raw($statsql))
+            ->where('ARTStartDate', '>=', DB::raw('DATE_SUB(CURDATE(), INTERVAL 1 YEAR)'))
+            ->where('TI', '!=', 'Yes')
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->groupBy('month_year')
+            ->orderBy('ARTStartDate')
+            ->withoutGlobalScopes()
+            ->get();
+
+        $month_year = [];
+        $enrollments = [];
+        foreach ($facilityList2 as $index => $list) {
+            $month_year[$index] =  $list->month_year;
+            $enrollments[$index] =  $list->enrollments;
+        }
+
+        $result=[
+            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'tx_new_trend_months'=>$month_year,
+            'tx_new_trend_data' => $enrollments
+        ];
+
+        return (!empty($result)) ?  $result : [];
     }
 
 
