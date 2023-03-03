@@ -32,6 +32,9 @@ class Treatment_new
             'new_state_data' => self::newPerformanceStateGraph($data,$tx, $start_date, $end_date),
             'new_lga_drill_data' => self::newPerformanceLgaGraph($data, $tx, $start_date, $end_date),
             'tx_trends_data' => self::tx_new_trend($data),
+            'tx_new_age_sex' => self::tx_age_sex($data, $tx, $start_date, $end_date),
+            'tx_curr_graph' => self::tx_CurrSex($data, $tx, $start_date, $end_date),
+            'tx_age_group_graph' => self::txNewageGroup($data, $tx, $start_date, $end_date)
         ];
     }
 
@@ -166,6 +169,94 @@ class Treatment_new
         ];
 
         return (!empty($result)) ?  $result : [];
+    }
+
+
+    public static function tx_age_sex($data,$tx, $start_date, $end_date): array
+    {
+
+        $statsql = "
+        CASE
+            WHEN age < 1 THEN '<1'
+            WHEN age BETWEEN 1 AND 4 THEN '1-4'
+            WHEN age BETWEEN 5 AND 9 THEN '5-9'
+            WHEN age BETWEEN 10 AND 14 THEN '10-14'
+            WHEN age BETWEEN 15 AND 19 THEN '15-19'
+            WHEN age BETWEEN 20 AND 24 THEN '20-24'
+            WHEN age BETWEEN 25 AND 29 THEN '25-29'
+            WHEN age BETWEEN 30 AND 34 THEN '30-34'
+            WHEN age BETWEEN 35 AND 39 THEN '35-39'
+            WHEN age BETWEEN 40 AND 44 THEN '40-44'
+            WHEN age BETWEEN 45 AND 49 THEN '45-49'
+            WHEN age >= 50 THEN '50+'
+        END AS age_range,
+        CAST(SUM(CASE WHEN sex = 'M' THEN -1 ELSE 0 END) as signed) AS male_count,
+        CAST(SUM(CASE WHEN sex = 'F' THEN 1 ELSE 0 END) as unsigned) AS female_count
+        ";
+
+        $txAgeSex= TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->where('TI','=','No')
+            ->whereBetween('ARTStartDate', [$start_date,$end_date])
+            ->groupBy('age_range')
+            ->orderByRaw("FIELD(age_range, '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+')")
+            ->withoutGlobalScopes()
+            ->get();
+
+        $male_count = [];
+        $female_count = [];
+        foreach ($txAgeSex as $index => $list) {
+            $male_count[$index] =  $list->male_count;
+            $female_count[$index] =  $list->female_count;
+        }
+
+        $result=[
+            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
+            'male_data'=>$male_count,
+            'female_data' => $female_count
+        ];
+
+        return (!empty($result)) ?  $result : [];
+    }
+
+    public static function tx_CurrSex($data, $tx,$start_date,$end_date): array
+    {
+        $statsql = "
+        sex AS `name`,
+        COUNT('pepid') as `y`";
+        $list =  TreatmentPerformance::select(DB::raw($statsql))
+            ->where('TI','=','No')
+            ->whereBetween('ARTStartDate', [$start_date,$end_date])
+            ->state($data->states)
+            ->lga($data->lgas)
+            ->facilities($data->facilities)
+            ->groupBy('sex')
+            ->withoutGlobalScopes()
+            ->get();
+        return (!empty($list)) ? $list->toArray() : [];
+    }
+
+    public static function txNewageGroup($data, $tx,$start_date,$end_date): array
+    {
+        $statsql = "
+        (CASE
+            WHEN age <= 9 THEN '≤9'
+            WHEN age BETWEEN 10 AND 19 THEN '10 -19'
+            WHEN age BETWEEN 20 AND 24 THEN '20 - 24'
+            WHEN age >= 25 THEN '25 +'
+        END) as name,
+        COUNT('pepid') as `y`";
+        $list =  TreatmentPerformance::select(DB::raw($statsql))
+            ->where('TI','=','No')
+            ->whereBetween('ARTStartDate', [$start_date,$end_date])
+            ->state($data->states)
+            ->lga($data->lgas)
+            ->facilities($data->facilities)
+            ->groupBy('name')
+            ->orderby('name','DESC')
+            ->withoutGlobalScopes()
+            ->get();
+        return (!empty($list)) ? $list->toArray() : [];
     }
 
 

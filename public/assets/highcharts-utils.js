@@ -47,16 +47,7 @@ function BuildDonut(id, title, data_array, colors) {
             enabled: false
         },
         colors: colors,
-        exporting: {
-            buttons: {
-                contextButton: {
-                    menuItems: [
-                        'downloadPNG',
-                    ]
-                },
-            },
-            enabled: true,
-        },
+        exporting: {enabled: false},
         responsive: {
             rules: [{
                 condition: {
