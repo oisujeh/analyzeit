@@ -42,4 +42,6 @@ Route::get('monitoring/pbs', [App\Http\Controllers\MonitoringController::class,'
 
 Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
 
+Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
+
 
