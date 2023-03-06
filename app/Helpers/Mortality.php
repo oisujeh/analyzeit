@@ -24,11 +24,12 @@ class Mortality
 
         return [
             'mortality_stats' => (!empty($list)) ? (array) $list->getAttributes() : [],
-            'new_state_data' => self::StateGraph($data, $start_date, $end_date)
+            'new_state_data' => self::MortalityGraph($data, $start_date, $end_date),
+            'regimenLineQs' => self::regimenLineByMortality($data, $start_date, $end_date)
         ];
     }
 
-    public static function StateGraph($data, $start_date, $end_date)
+    public static function MortalityGraph($data, $start_date, $end_date)
     {
         $statsql = "
             year(Outcomes_Date) as `year`,
@@ -59,6 +60,34 @@ class Mortality
             ->orderBy('year', 'ASC')
             ->withoutGlobalScopes()
             ->get();
+    }
+
+    public static function regimenLineByMortality($data, $start_date, $end_date): array
+    {
+
+        $statsql = "
+        CASE
+            WHEN CurrentRegimenLine = 'Adult.1st.Line' THEN 'Adult 1st line ARV regimen'
+            when CurrentRegimenLine = 'Adult.2nd.Line' THEN 'Adult 2nd line ARV regimen'
+            when CurrentRegimenLine = 'Adult.3rd.Line' THEN 'Adult 3rd line ARV regimen'
+            when CurrentRegimenLine = 'Peds.1st.Line' THEN 'Child 1st line ARV regimen'
+            when CurrentRegimenLine = 'Peds.2nd.Line' THEN 'Child 2nd line ARV regimen'
+            when CurrentRegimenLine = 'Peds.3rd.Line' THEN 'Child 3rd line ARV regimen'
+        END as name,
+
+        CAST(COUNT(pepid) AS UNSIGNED) AS y
+        ";
+
+        $list = TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->where('Outcomes','=','Dead')
+            ->whereBetween('Outcomes_Date', [$start_date,$end_date])
+            ->groupBy('name')
+            ->orderBy('name','ASC')
+            ->withoutGlobalScopes()
+            ->get();
+
+        return (!empty($list)) ? $list->toArray() : [];
     }
 
 
