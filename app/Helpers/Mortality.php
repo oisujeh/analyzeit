@@ -4,10 +4,11 @@ namespace App\Helpers;
 
 use App\Models\TreatmentPerformance;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\ArrayShape;
 
 class Mortality
 {
-    public static function mortality_stats($data, $start_date, $end_date): array
+    #[ArrayShape(['mortality_stats' => "array", 'new_state_data' => "mixed", 'regimenLineQs' => "array", 'sex_total' => "array", 'vl' => "array", 'artd' => "array"])] public static function mortality_stats($data, $start_date, $end_date): array
     {
         $statsql = "FORMAT(COALESCE(COUNT(DISTINCT CASE WHEN `Outcomes_Date` BETWEEN '$start_date' AND '$end_date' AND `Outcomes` = 'Dead' THEN `state` END),0),0) AS `states`,
         FORMAT(COALESCE(COUNT(DISTINCT CASE WHEN `Outcomes_Date` BETWEEN '$start_date' AND '$end_date' AND `Outcomes` = 'Dead' THEN `lga` END),0),0) AS `lga`,
@@ -25,7 +26,10 @@ class Mortality
         return [
             'mortality_stats' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'new_state_data' => self::MortalityGraph($data, $start_date, $end_date),
-            'regimenLineQs' => self::regimenLineByMortality($data, $start_date, $end_date)
+            'regimenLineQs' => self::regimenLineByMortality($data, $start_date, $end_date),
+            'sex_total' => self::sexByMortality($data, $start_date, $end_date),
+            'vl'  => self::vlByMortality($data, $start_date, $end_date),
+            'artd'  => self::ArtDuration($data, $start_date, $end_date)
         ];
     }
 
@@ -87,6 +91,67 @@ class Mortality
             ->withoutGlobalScopes()
             ->get();
 
+        return (!empty($list)) ? $list->toArray() : [];
+    }
+
+    public static function sexByMortality($data, $start_date, $end_date): array
+    {
+
+        $statsql = "
+        CAST(SUM(CASE WHEN sex = 'M' THEN 1 ELSE 0 END) as signed) AS males,
+        CAST(SUM(CASE WHEN sex = 'F' THEN 1 ELSE 0 END) as unsigned) AS females
+        ";
+
+        $list = TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->where('Outcomes','=','Dead')
+            ->whereBetween('Outcomes_Date', [$start_date,$end_date])
+           /* ->groupBy('name')
+            ->orderBy('name','ASC')*/
+            ->withoutGlobalScopes()
+            ->get();
+
+        return (!empty($list)) ? $list->toArray() : [];
+    }
+
+    public static function vlByMortality($data, $start_date, $end_date): array
+    {
+
+        $statsql = "
+        CAST(SUM(CASE WHEN CurrentViralLoad < 1000  THEN 1 ELSE 0 END) as unsigned) AS suppressed,
+        CAST(SUM(CASE WHEN CurrentViralLoad >= 1000  THEN 1 ELSE 0 END) as unsigned) AS unsuppressed,
+        CAST(SUM(CASE WHEN CurrentViralLoad is null THEN 1 ELSE 0 END) as unsigned) AS no_vl
+        ";
+
+        $list = TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->where('Outcomes','=','Dead')
+            ->whereBetween('Outcomes_Date', [$start_date,$end_date])
+            /* ->groupBy('name')
+             ->orderBy('name','ASC')*/
+            ->withoutGlobalScopes()
+            ->get();
+
+        return (!empty($list)) ? $list->toArray() : [];
+    }
+
+    public static function ArtDuration($data, $start_date, $end_date): array
+    {
+        $statsql = "
+        state as states,
+        CAST(SUM(`Outcomes` = 'Dead' and DATEDIFF(Outcomes_Date, ARTStartDate) < 365) as unsigned) AS `less_1`,
+        CAST(SUM(`Outcomes` = 'Dead' and DATEDIFF(Outcomes_Date, ARTStartDate) > 365 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 1095) as unsigned) AS `b1_3`,
+        CAST(SUM(`Outcomes` = 'Dead' and DATEDIFF(Outcomes_Date, ARTStartDate) > 1095 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 1825) as unsigned) AS `b3_5`,
+        CAST(SUM(`Outcomes` = 'Dead' and DATEDIFF(Outcomes_Date, ARTStartDate) > 1825) as unsigned) AS `gt_5`
+        ";
+
+        $list = TreatmentPerformance::select(DB::raw($statsql))
+            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
+            ->whereBetween('Outcomes_Date', [$start_date,$end_date])
+            ->groupBy('state')
+             ->orderBy('state','ASC')
+            ->withoutGlobalScopes()
+            ->get();
         return (!empty($list)) ? $list->toArray() : [];
     }
 

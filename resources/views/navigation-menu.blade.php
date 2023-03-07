@@ -36,16 +36,20 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <x-jet-dropdown-link href="{{ route('treatment') }}" :active="request()->routeIs('treatment')">
-                                        {{ __('Treatment Dashboard') }}
+                                    <x-jet-dropdown-link href="{{ route('treatment') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-cog mr-2"></i> {{ __('Treatment Monitoring') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
-                                    <x-jet-dropdown-link href="{{ route('pbs') }}" :active="request()->routeIs('pbs')">
-                                        {{ __('PBS') }}
+                                    <x-jet-dropdown-link href="{{ route('pbs') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-comparison mr-2"></i>{{ __('PBS') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
-                                    <x-jet-dropdown-link href="{{ route('regimen') }}" :active="request()->routeIs('regimen')">
-                                        {{ __('Quality of Care') }}
+                                    <x-jet-dropdown-link href="{{ route('regimen') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-chart-line mr-2"></i>{{ __('Quality of Care') }}
+                                    </x-jet-dropdown-link>
+                                    <div class="border-t border-gray-100"></div>
+                                    <x-jet-dropdown-link href="{{ route('mortality') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-exclamation-triangle mr-2"></i>{{ __('Mortality Surveillance') }}
                                     </x-jet-dropdown-link>
                                 </div>
                             </x-slot>
