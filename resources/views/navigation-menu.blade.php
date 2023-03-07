@@ -97,7 +97,7 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <x-jet-dropdown-link href="{{ route('appointment') }}" :active="request()->routeIs('appointment')">
+                                    <x-jet-dropdown-link href="{{ route('appointment') }}">
                                         {{ __('Appointment Dashboard') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
