@@ -28,6 +28,29 @@
 
     </head>
     <body class="font-sans antialiased">
+        <style>
+            /* Adjust the layout for screens smaller than 640px */
+            @media (max-width: 640px) {
+                .grid-cols-12 {
+                    grid-template-columns: 1fr;
+                }
+
+                .md\:grid-cols-3 {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Adjust the layout for screens larger than 640px */
+            @media (min-width: 641px) {
+                .grid-cols-12 {
+                    grid-template-columns: repeat(12, minmax(0, 1fr));
+                }
+
+                .md\:grid-cols-3 {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+        </style>
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100">
