@@ -39,6 +39,29 @@
 
 </head>
 <body class="font-sans antialiased">
+<style>
+    /* Adjust the layout for screens smaller than 640px */
+    @media (max-width: 640px) {
+        .grid-cols-12 {
+            grid-template-columns: 1fr;
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Adjust the layout for screens larger than 640px */
+    @media (min-width: 641px) {
+        .grid-cols-12 {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+</style>
 <x-jet-banner />
 
 <div class="min-h-screen bg-gray-100">
@@ -60,7 +83,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-12 gap-4">
                     <!--Start side bar -->
-                    <div class="col-span-3 bg-white rounded p-4 shadow-md max-w-sm max-h-fit">
+                    <div class="col-span-3 bg-white h-fit rounded p-4 shadow-md max-w-sm max-h-fit">
                         <p class="text-sm font-medium">APPLY FILTERS BELOW TO LOAD DATA</p>
 
                         <!--begin::Form-->
@@ -88,7 +111,7 @@
                                 <select id="state" name="state" class="e2 select2 select2-selection--multiple mt-1 block
                                 w-full py-1 px-1.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none
                                 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
-                                    <option value="">Choose ...</option>
+                                    <option value="" disabled></option>
                                     <option value="7">Benue</option>
                                     <option value="28">Ogun</option>
                                     <option value="29">Ondo</option>
@@ -104,8 +127,6 @@
                                 </label>
                                 <select id="lga" name="lga" class="e2 select2 block w-full py-2 px-3 bg-white
                                 rounded-md shadow-sm text-sm" data-toggle="select2" multiple="multiple">
-                                    <option value="">Choose ...</option>
-
                                 </select>
                             </div>
 
@@ -162,7 +183,6 @@
     $('#report_containner').load(uri);
 
     $(".e2").select2({
-        placeholder: "Choose...",
         allowClear: true
     });
 

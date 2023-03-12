@@ -104,4 +104,14 @@ class MonitoringController extends Controller
         return view('monitoring.quality_of_care');
     }
 
+    public function mortality(): Factory|View|Application
+    {
+
+        return view('monitoring.mortality');
+
+
+    }
+
+
+
 }

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Helpers\Scripts as Helper;
 use App\Helpers\Treatment_new as Helper1;
+use App\Helpers\VL as Helper2;
+use App\Helpers\Mortality as Helper3;
 use Illuminate\Support\Facades\View;
 
 
@@ -31,7 +33,7 @@ Route::post('/treatment-filter', function(Request $request) {
     $end_date = $request->end_date;
     switch($selectIndicator) {
         case 'pvls':
-            return Helper::vLGraph($request, $selectIndicator);
+            return Helper2::vLGraph($request, $selectIndicator);
         case 'tx_curr':
             return Helper::treamentPerformance($request,$selectIndicator,$start_date,$end_date);
         case 'tx_new':
@@ -53,6 +55,16 @@ Route::post('/quality-care', function(Request $request){
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('quality.filter');
+
+Route::post('/mortality', function(Request $request){
+    $selectIndicator = $request->selectIndicator;
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    return match ($selectIndicator) {
+        'ms' => Helper3::mortality_stats($request, $start_date, $end_date),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
+})->name('mortality.filter');
 
 
 Route::get('/get-wiget/{id}', function($page){

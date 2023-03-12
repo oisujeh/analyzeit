@@ -39,6 +39,29 @@
 
 </head>
 <body class="font-sans antialiased">
+<style>
+    /* Adjust the layout for screens smaller than 640px */
+    @media (max-width: 640px) {
+        .grid-cols-12 {
+            grid-template-columns: 1fr;
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Adjust the layout for screens larger than 640px */
+    @media (min-width: 641px) {
+        .grid-cols-12 {
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+        }
+
+        .md\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+</style>
 <x-jet-banner />
 
 <div class="min-h-screen bg-gray-100">
@@ -75,7 +98,7 @@
                 <div class="grid grid-cols-12 gap-4">
 
                     <!--Start side bar -->
-                    <div class="col-span-3 rounded p-4 drop-shadow-md">
+                    <div class="col-span-3 bg-white h-fit rounded p-4 drop-shadow-md">
                         <p class="text-sm font-medium">APPLY FILTERS BELOW TO LOAD DATA</p>
 
                         <!--begin::Form-->
@@ -102,11 +125,11 @@
                                     <i class="uil uil-map-pin-alt"></i> States
                                 </label>
                                 <select id="state" name="state"
-                                        class="e2 select2 select2-selection--multiple mt-1 block w-full py-1
-                                        px-1.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none
+                                        class="e2 select2 mt-1 block w-full py-2 px-3 border
+                                        border-gray-300 bg-white rounded-md shadow-sm focus:outline-none
                                         focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        data-toggle="select2" multiple="multiple">
-                                    <option value="">Choose ...</option>
+                                        multiple="multiple">
+                                    <option value="" disabled>Choose ...</option>
                                     <option value="7">Benue</option>
                                     <option value="28">Ogun</option>
                                     <option value="29">Ondo</option>
@@ -123,7 +146,6 @@
                                 <select id="lga" name="lga" class="e2 select2 mt-1 block w-full h-4 py-2 px-3 border border-gray-300
                                 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500
                                 sm:text-sm" data-toggle="select2" multiple="multiple">
-                                    <option value="">Choose ...</option>
                                 </select>
                             </div>
 
@@ -222,7 +244,6 @@
     $('#report_containner').load(baseUrlWiget);
 
     $(".e2").select2({
-        placeholder: "Choose...",
         allowClear: true
     });
 
@@ -274,27 +295,29 @@
                 encode: true,
             }).done(function(data){
                 var response = data.treatment_perfomance;
-                var age_group_categories = [
-                    '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+'
-                ];
 
-                var tx_new_series = [
-                    {
-                        name: 'Male',
-                        data: data.tx_new_age_sex.male_data,
-                        color: '#A3A8E2'
-                    }, {
-                        name: 'Female',
-                        data: data.tx_new_age_sex.female_data,
-                        color: '#494FA3'
-                    }
-                ];
-
-
-                var male_max = Math.abs(Math.min.apply(Math, data.tx_new_age_sex.male_data));
-                var female_max = Math.abs(Math.max.apply(Math, data.tx_new_age_sex.female_data));
-                var max = female_max > male_max ? female_max : male_max;
                 if (selectReports.val() === 'tx_curr') {
+                    var age_group_categories = [
+                        '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+'
+                    ];
+
+                    var tx_new_series = [
+                        {
+                            name: 'Male',
+                            data: data.tx_new_age_sex.male_data,
+                            color: '#A3A8E2'
+                        }, {
+                            name: 'Female',
+                            data: data.tx_new_age_sex.female_data,
+                            color: '#494FA3'
+                        }
+                    ];
+
+
+                    var male_max = Math.abs(Math.min.apply(Math, data.tx_new_age_sex.male_data));
+                    var female_max = Math.abs(Math.max.apply(Math, data.tx_new_age_sex.female_data));
+                    var max = female_max > male_max ? female_max : male_max;
+
                     $(".tx_patient").html(Number(response.active).toLocaleString());
                     $(".tx_facilities").html(response.facilities);
                     $(".tx_states").html(response.states)
@@ -327,6 +350,27 @@
 
 
                 } else if (selectReports.val() === 'tx_new') {
+                    var age_group_categories = [
+                        '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+'
+                    ];
+
+                    var tx_new_series = [
+                        {
+                            name: 'Male',
+                            data: data.tx_new_age_sex.male_data,
+                            color: '#A3A8E2'
+                        }, {
+                            name: 'Female',
+                            data: data.tx_new_age_sex.female_data,
+                            color: '#494FA3'
+                        }
+                    ];
+
+
+                    var male_max = Math.abs(Math.min.apply(Math, data.tx_new_age_sex.male_data));
+                    var female_max = Math.abs(Math.max.apply(Math, data.tx_new_age_sex.female_data));
+                    var max = female_max > male_max ? female_max : male_max;
+
                     $(".tx_new").html(Number(response.new).toLocaleString());
                     $(".tx_facility").html(response.facility)
                     $(".tx_states").html(response.states)

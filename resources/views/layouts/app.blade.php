@@ -16,7 +16,7 @@
         <link href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css" rel="stylesheet"
               type="text/css" />
-        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.0/css/line.css">
 
 
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -28,6 +28,29 @@
 
     </head>
     <body class="font-sans antialiased">
+        <style>
+            /* Adjust the layout for screens smaller than 640px */
+            @media (max-width: 640px) {
+                .grid-cols-12 {
+                    grid-template-columns: 1fr;
+                }
+
+                .md\:grid-cols-3 {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Adjust the layout for screens larger than 640px */
+            @media (min-width: 641px) {
+                .grid-cols-12 {
+                    grid-template-columns: repeat(12, minmax(0, 1fr));
+                }
+
+                .md\:grid-cols-3 {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+        </style>
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100">
@@ -66,8 +89,7 @@
         <script src="https://code.highcharts.com/modules/accessibility.js"></script>
         <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
         <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
-        <script src="{{asset('highchart2.0/modules/highcharts-utils.js')}}" type="text/javascript"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="{{asset('assets/highcharts-utils.js')}}"></script>
         <script src="{{asset('./assets/vendor/preline/dist/preline.js')}}"></script>
         @yield('footer_scripts')
     </body>
