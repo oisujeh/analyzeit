@@ -38,7 +38,7 @@ Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringC
 
 Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
-Route::get('monitoring/pbs', [App\Http\Controllers\MonitoringController::class,'pbs'])->name('pbs');
+Route::get('monitoring/biometrics_report', [App\Http\Controllers\MonitoringController::class,'pbsDashboard'])->name('pbs');
 
 Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
 

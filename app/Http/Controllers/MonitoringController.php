@@ -59,7 +59,7 @@ class MonitoringController extends Controller
 
     }
 
-    public function pbs(): Factory|View|Application
+    /*public function pbs(): Factory|View|Application
     {
         $active = DB::table('pbs_report')
             ->select(DB::raw("
@@ -93,7 +93,7 @@ class MonitoringController extends Controller
         return view('monitoring.pbs', compact('active','captured','notcaptured','invalid','valid'));
         //dd($pbsList);
         //dd(json_encode($pbsList));
-    }
+    }*/
 
 
     public function regimenDashboard(): Factory|View|Application
@@ -106,10 +106,13 @@ class MonitoringController extends Controller
 
     public function mortality(): Factory|View|Application
     {
-
         return view('monitoring.mortality');
 
+    }
 
+    public function pbsDashboard(): Factory|View|Application
+    {
+        return view('monitoring.biometrics_report');
     }
 
 
