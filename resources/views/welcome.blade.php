@@ -190,56 +190,18 @@
 </section>
 <!-- End of Features -->
 
-<!--Testimonals -->
-<section id="testimonals">
-    {{--<div class="max-w-6xl px-5 mx-auto mt-32 text-center">
-        <h2 class="text-4xl font-bold text-center">
-            What people are saying
-        </h2>
-        <div class="flex flex-col mt-24 md:flex-row md:space-x-6">
-            <div class="flex flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:w-1/3">
-                <img src="./assets/img/avatar-anisha.png" class="w-16 -mt-14" alt="">
-                <h5 class="text-lg font-bold text-center mb-4">Anisha Li</h5>
-                <p class="text-sm text-darkGrayishBlue">
-                    "Manage has superchanged our team's workflow. I can't imagine what we would do without it."
-                </p>
-            </div><br>
-            <div class="flex flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:w-1/3">
-                <img src="./assets/img/avatar-anisha.png" class="w-16 -mt-14" alt="">
-                <h5 class="text-lg font-bold text-center mb-4">Anisha Li</h5>
-                <p class="text-sm text-darkGrayishBlue">
-                    "Manage has superchanged our team's workflow. I can't imagine what we would do without it."
-                </p>
-            </div><br>
-            <div class="flex flex-col items-center p-6 space-y-6 rounded-lg bg-veryLightGray md:w-1/3">
-                <img src="./assets/img/avatar-anisha.png" class="w-16 -mt-14" alt="">
-                <h5 class="text-lg font-bold text-center mb-4">Anisha Li</h5>
-                <p class="text-sm text-darkGrayishBlue">
-                    "Manage has superchanged our team's workflow. I can't imagine what we would do without it."
-                </p>
-            </div><br>
-        </div>
-        <div class="my-16">
-            <a href="#"
-               class="p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight">
-                Get Started
-            </a>
-        </div>
-    </div>--}}
-</section>
-
 <!--CTA Section-->
 <section class="bg-brightRed" id="cta">
     <div class="container flex flex-col items-center justify-between px-6 py-24 mx-auto space-y-12 md:py-12 md:flex-row md:space-y-0">
         <h2 class="text-5xl font-bold leading-tight text-center text-white md:text-4xl md:max-w-xl md:text-left">
             Simplify how your team works today
         </h2>
-        <div>
+<!--        <div>
             <a href="#"
                class="p-3 px-6 pt-2 text-brightRed bg-white rounded-full shadow-2xl baseline hover:bg-gray-900">
                 Get Started
             </a>
-        </div>
+        </div>-->
     </div>
 
 </section>
@@ -251,12 +213,17 @@
         <!--Logo and Socials-->
         <div class="flex flex-col-reverse items-center justify-between space-y-12 md:flex-col md:space-y-0 md:items-start">
             <div class="mx-auto my-6 text-center text-white md:hidden">
-                Copyright &copy; 2022, All Rights Reserved
+                Copyright &copy;
+                <script>
+                    var CurrentYear = new Date().getFullYear()
+                    document.write(CurrentYear)
+                </script>
+                APIN Health Informatics Team
             </div>
             <div>
                 <img src="https://raw.githubusercontent.com/oisujeh/trainsmart1/b92d4b5ed844cb6e8146695b3da0e3f3ee9117de/public/assets/img/logo-white.svg" alt="logo" class="h-8">
             </div>
-            <div class="flex justify-center space-x-4">
+<!--            <div class="flex justify-center space-x-4">
                 <a href="#">
                     <img src="./assets/img/icon-facebook.svg" alt="" class="h-8"/>
                 </a>
@@ -273,10 +240,10 @@
                     <img src="./assets/img/icon-pinterest.svg" alt="" class="h-8"/>
                 </a>
 
-            </div>
+            </div>-->
         </div>
         <!--List Container-->
-        <div class="flex justify-around space-x-32">
+<!--        <div class="flex justify-around space-x-32">
             <div class="flex flex-col space-y-3 text-white">
                 <a href="#" class="hover:text-brightRed">Home</a>
                 <a href="#" class="hover:text-brightRed">Pricing</a>
@@ -289,24 +256,24 @@
                 <a href="#" class="hover:text-brightRed">Community</a>
                 <a href="#" class="hover:text-brightRed">Privacy Policy</a>
             </div>
-        </div>
+        </div>-->
 
         <div class="flex flex-col justify-between">
-            <form>
+<!--            <form>
                 <div class="flex space-x-3">
                     <input type="text" class="flex-1 px-4 rounded-full focus:outline-none" placeholder="Updates in your inbox"/>
                     <button class="px-6 py-2 text-white rounded-full bg-brightRed hover:bg-brightRedLight focus:outline-none">
                         Go
                     </button>
                 </div>
-            </form>
+            </form>-->
             <div class="hidden text-white md:block">
-                Copyright &copy; 
+                Copyright &copy;
                 <script>
                     var CurrentYear = new Date().getFullYear()
                     document.write(CurrentYear)
                 </script>
-                , All Rights Reserved
+                 APIN Health Informatics Team
             </div>
         </div>
     </div>
