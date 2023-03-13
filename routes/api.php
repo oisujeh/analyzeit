@@ -8,6 +8,7 @@ use App\Helpers\Scripts as Helper;
 use App\Helpers\Treatment_new as Helper1;
 use App\Helpers\VL as Helper2;
 use App\Helpers\Mortality as Helper3;
+use App\Helpers\Biometrics as Helper4;
 use Illuminate\Support\Facades\View;
 
 
@@ -67,12 +68,25 @@ Route::post('/mortality', function(Request $request){
 })->name('mortality.filter');
 
 
+Route::post('/pbs', function(Request $request){
+    $selectIndicator = $request->selectIndicator;
+    return match ($selectIndicator) {
+        'coverage' => Helper4::biometrics($request),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
+})->name('pbs.filter');
+
+
 Route::get('/get-wiget/{id}', function($page){
     return View::make('monitoring.reports.'.$page);
 });
 
 Route::get('/get-widget/{id}', function($page){
     return View::make('monitoring.qoc.'.$page);
+});
+
+Route::get('/pbs-widget/{id}', function($page){
+    return View::make('monitoring.pbs.'.$page);
 });
 
 Route::get('/sendSMS', function(Request $request){

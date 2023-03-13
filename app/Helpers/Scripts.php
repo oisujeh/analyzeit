@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 use App\Models\TreatmentPerformance;
 use App\Models\QualPerformance;
-use App\Models\VLPerformance;
 use Illuminate\Support\Facades\DB;
 
 class Scripts
