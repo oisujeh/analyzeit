@@ -197,7 +197,8 @@
     var baseUrlApi = '<?php echo URL::to('/api').'/';?>';
     var baseUrlWiget = '<?php echo URL::to('/api').'/pbs-widget/';?>';
 
-    $('#report_containner').load(baseUrlWiget);
+    let uri = baseUrlWiget+'coverage';
+    $('#report_containner').load(uri);
 
     $(".e2").select2({
         allowClear: true
@@ -234,12 +235,12 @@
                 name: 'facilities',
                 value: facility
             });
-            // $(".tx_curr").html('...')
-            // $(".tx_new").html('...')
-            // $(".tx_facilities").html('...')
-            // $(".tx_states").html('...')
-            // $(".tx_lgas").html('...')
-            // $(".tx_eligible").html('...')
+            $(".tx_curr").html('...')
+            $(".tx_captured").html('...')
+            $(".tx_coverage").html('...')
+            $(".tx_valid").html('...')
+            $(".tx_invalid").html('...')
+            $(".tx_not_captured").html('...')
 
             console.log(formData);
 
@@ -253,6 +254,13 @@
                 var response = data.treatment_perfomance;
 
                 if (selectReports.val() === 'coverage') {
+
+                    $(".tx_curr").html(Number(response.active).toLocaleString())
+                    $(".tx_captured").html(Number(response.pbs).toLocaleString())
+                    $(".tx_coverage").html(Number(response.coverage).toLocaleString())
+                    $(".tx_valid").html(Number(response.valid).toLocaleString())
+                    $(".tx_invalid").html(Number(response.invalid).toLocaleString())
+                    $(".tx_not_captured").html(Number(response.nopbs).toLocaleString())
                     console.log(data)
                     build_coverage_analytics(data);
                 }
