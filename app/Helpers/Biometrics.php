@@ -49,7 +49,6 @@ class Biometrics
             ->withoutGlobalScopes()
             ->first();
 
-
         return [
             'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'Results' => [
@@ -171,7 +170,6 @@ class Biometrics
                 'yAxis' => 0
             ],
             'name'=>'APIN'
-
         ];
     }
 
@@ -202,7 +200,6 @@ class Biometrics
                 'yAxis' => 0
             ],
             'name'=>'APIN'
-
         ];
 
     }
@@ -234,7 +231,6 @@ class Biometrics
                 'yAxis' => 1
             ],
             'name'=>'APIN'
-
         ];
     }
 
@@ -292,7 +288,6 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
@@ -332,7 +327,6 @@ class Biometrics
                 $lgaArray['drilldown'] = $lgas->drilldown;
                 $lgaArray['y'] = $lgas->y;
                 $drillDownLga[$index2] = $lgaArray;
-
             }
             $stateListBar[$index1]["data"] = $drillDownLga;
 
@@ -347,7 +341,6 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
@@ -401,7 +394,6 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
@@ -441,7 +433,6 @@ class Biometrics
                 'y' => $item->y
             ];
         }
-
         foreach ($lgaList as $lgaCode => $lgaData) {
             $graphData[] = [
                 'data' => [
@@ -454,7 +445,6 @@ class Biometrics
                 'name' => $lgaData['name']
             ];
         }
-
         return $graphData;
     }
 
@@ -561,16 +551,6 @@ class Biometrics
                 'name' => $lgaData['name']
             ];
         }
-
         return $graphData;
     }
-
-
-
-
-
-
-
-
-
 }
