@@ -112,10 +112,10 @@
     <div class="container flex flex-col px-4 mx-auto mt-10 space-y-12 md:space-y-0 md:flex-row">
         <div class="flex flex-col space-y-12 md:w-1/2">
             <h2 class="max-w-md text-4xl font-bold text-center md:text-left">
-                What's different about Manage?
+                What's different about K4Action?
             </h2>
             <div class="p max-w-sm text-center text-darkGrayishBlue md:text-left">
-                Manage is a platform that helps teams to plan day-to-day tasks and get work done faster.
+                K4Action is a platform that helps you get insight about data from our EMR.
             </div>
         </div>
         <div class="flex flex-col spacepace-y-8 md:w-1/2">
@@ -126,18 +126,18 @@
                             01
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
-                            Track your progress
+                            Track PBS progress
                         </h3>
                     </div>
                 </div>
                 <div>
                     <h3 class="hidden mb-4 text-base font-bold md:block">
-                        Track your progress
+                        Track PBS progress
                     </h3>
                     <p class="text-darkGrayishBlue text-justify">
-                        See how your day-to-day tasks fit into the wider vision. Go from tracking progess to
-                        at the milestone level all the way done to the smallest detail. Never lose track of the
-                        bigger picture again.
+                        Get biometric coverage insight as an organization. Identify gaps by knowing how many clients
+                        have their fingerprints captured, you can also see the number of clients with valid or invalid
+                        prints. You can drill down to facility data.
                     </p><br>
                 </div>
             </div>
@@ -148,13 +148,13 @@
                             02
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
-                            Advanced bilt-in features
+                           Treatment Monitoring
                         </h3>
                     </div>
                 </div>
                 <div>
                     <h3 class="hidden mb-4 text-base font-bold md:block">
-                        Track your progress
+                        Treatment Monitoring
                     </h3>
                     <p class="text-darkGrayishBlue text-justify">
                         See how your day-to-day tasks fit into the wider vision. Go from tracking progess to
@@ -170,18 +170,17 @@
                             03
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
-                            Everything in one place
+                            Appointment Reminders
                         </h3>
                     </div>
                 </div>
                 <div>
                     <h3 class="hidden mb-4 text-base font-bold md:block">
-                        Track your progress
+                        Appointment Reminders
                     </h3>
                     <p class="text-darkGrayishBlue text-justify">
-                        See how your day-to-day tasks fit into the wider vision. Go from tracking progess to
-                        at the milestone level all the way done to the smallest detail. Never lose track of the
-                        bigger picture again.
+                        Built-in service that send SMS reminders to clients, reminding them of their appointments, this
+                        can either be ARV Refill or Sample Collection.
                     </p><br>
                 </div>
             </div>
@@ -194,7 +193,7 @@
 <section class="bg-brightRed" id="cta">
     <div class="container flex flex-col items-center justify-between px-6 py-24 mx-auto space-y-12 md:py-12 md:flex-row md:space-y-0">
         <h2 class="text-5xl font-bold leading-tight text-center text-white md:text-4xl md:max-w-xl md:text-left">
-            Simplify how your team works today
+            Start exploring with our user-friendly analytics platform
         </h2>
 <!--        <div>
             <a href="#"
