@@ -36,7 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('monitoring/treatment_dashboard', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
 
-    Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+
 
     Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
@@ -47,5 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
 
 });
+
+Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
 
 
