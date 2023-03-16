@@ -46,8 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
 
+    Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+
 });
 
-Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+
 
 

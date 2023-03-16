@@ -44,10 +44,13 @@ class Scripts
         $graphSql  = " `state` AS 'name', COUNT(`PepID`) AS  'y', `state` AS 'drilldown' ";
         $graphSql2 = " `lga` as 'lga',count(pepid) as  'patients'";
         $today_appointments_stats = DB::table('today_appointments')->select(DB::raw($graphSql))->groupBy('state')->get();
+        $tomorrow_appointments_stats = DB::table('tomorrow_appointments')->select(DB::raw($graphSql))->groupBy('state')->get();
 
         return  [
             'today_lga_list' =>  $today_appointments_stats,
+            'tomorrow_lga_list' =>  $tomorrow_appointments_stats,
             'today_appointments_graph_drilldown' => self::appPerformanceLgaGraph('today_appointments'),
+            'tomorrow_appointments_graph_drilldown' => self::appPerformanceLgaGraph('tomorrow_appointments'),
         ];
     }
 

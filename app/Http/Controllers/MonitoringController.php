@@ -20,12 +20,14 @@ class MonitoringController extends Controller
     public function appointmentDashboard(): Factory|View|Application
     {
         $todaysAppt = Helper::dashbordScript("today_appointments");
+        $tomorrowsAppt = Helper::dashbordScript("tomorrow_appointments");
 
         $data = [
             'dashboardGraphs' => Helper::dashboardGraphs(),
-            'today_appointments' => Helper::dashbordScript("today_appointments")
+            'today_appointments' => Helper::dashbordScript("today_appointments"),
+            'tomorrow_appointments' => Helper::dashbordScript("tomorrow_appointments")
         ];
-        return view('monitoring.appointment_dashboard',compact('data','todaysAppt'));
+        return view('monitoring.appointment_dashboard',compact('data','todaysAppt','tomorrowsAppt'));
     }
 
    /* public function dashboardScript($table): array
