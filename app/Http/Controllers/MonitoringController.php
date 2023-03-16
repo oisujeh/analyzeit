@@ -14,15 +14,12 @@ class MonitoringController extends Controller
 {
     public function treatmentDashboard(): Factory|View|Application
     {
-        /*$data = [
-            'dashboardGraphs' => Helper::dashboardGraphs()
-        ];*/
         return view('monitoring.treatment_dashboard');
     }
 
     public function appointmentDashboard(): Factory|View|Application
     {
-        $todaysAppt = $this->dashboardScript("today_appointments");
+        $todaysAppt = Helper::dashbordScript("today_appointments");
 
         $data = [
             'dashboardGraphs' => Helper::dashboardGraphs(),
@@ -31,7 +28,7 @@ class MonitoringController extends Controller
         return view('monitoring.appointment_dashboard',compact('data','todaysAppt'));
     }
 
-    #[ArrayShape(['stats' => "mixed", 'list' => "\Illuminate\Support\Collection"])] public function dashboardScript($table): array
+   /* public function dashboardScript($table): array
     {
 
         $StatsSql = "SELECT * FROM( SELECT
@@ -57,7 +54,7 @@ class MonitoringController extends Controller
 
         return array('stats'=> $stats ,'list'=> $list);
 
-    }
+    }*/
 
     public function regimenDashboard(): Factory|View|Application
     {

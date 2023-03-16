@@ -47,7 +47,7 @@ class Scripts
 
         return  [
             'today_lga_list' =>  $today_appointments_stats,
-            'today_appointments_graph_drilldown' => self::plotGraphByLGA('today_appointments', $today_appointments_stats, $graphSql2),
+            'today_appointments_graph_drilldown' => self::appPerformanceLgaGraph('today_appointments'),
         ];
     }
 
@@ -370,6 +370,78 @@ class Scripts
         ];
 
         return (!empty($result)) ?  $result : [];
+    }
+
+    public static function appPerformanceLgaGraph($tableName): array
+    {
+
+        $stateListBar = [];
+        $stateList =  DB::table($tableName)->select(DB::raw("state AS `name`"))
+            ->groupBy('name')->get();
+
+        $out = [];
+        $out2 = [];
+
+        foreach ($stateList  as  $index1  => $states) {
+            $stateListBar[$index1]['name'] = $states->name;
+            $stateListBar[$index1]['id'] = $states->name;
+
+            $lgaList =   DB::table($tableName)->select(DB::raw(
+                " lga,lgaCode, CAST(count(pepid) AS UNSIGNED) as  'patients'"
+            ))
+                ->where(['state' => $states->name])
+                ->groupBy('lga')
+                ->groupBy('lgaCode')
+                ->get();
+
+            $lgaArray = [];
+            $drillDownLga = [];
+            $lgaListArray = [];
+
+            foreach ($lgaList as $index2 => $lgas) {
+                $lgaArray['name'] = $lgas->lga;
+                $lgaArray['y'] = $lgas->patients;
+                $lgaArray['drilldown'] = $lgas->lga;
+                $drillDownLga[$index2] = $lgaArray;
+
+                $lgaListArray['lgaCode'] = $lgas->lgaCode;
+                $lgaListArray['lga'] = $lgas->lga;
+                array_push($out, $lgaListArray);
+            }
+            $stateListBar[$index1]["data"] = $drillDownLga;
+        }
+
+        $facilityList =  DB::table($tableName)->select(DB::raw(
+            "lga, lgaCode,facility_name , CAST(count(pepid) AS UNSIGNED) as  'patients'"
+        ))
+            ->groupBy('lga')
+            ->groupBy('lgaCode')
+            ->groupBy('facility_name')
+            ->get();
+
+
+        foreach ($out as $index => $lga) {
+            $out2[$index]['name'] = $lga['lga'];
+            $out2[$index]['id'] = $lga['lga'];
+            $fac = [];
+            $facElement = [];
+            $i = 0;
+            foreach ($facilityList as $key => $facility) {
+
+                if ($facility->lgaCode == $lga['lgaCode']) {
+                    $facElement[0] = $facility->facility_name;
+                    $facElement[1] = $facility->patients;
+                    $fac[$i] =  $facElement;
+                    $i++;
+                }
+            }
+            $out2[$index]['data'] = $fac;
+        }
+
+        foreach ($out2 as $index => $list) {
+            array_push($stateListBar, $list);
+        }
+        return (!empty($stateListBar)) ?  $stateListBar   : [];
     }
 
 
