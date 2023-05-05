@@ -11,7 +11,6 @@
                 </div>
 
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
-
                     <div class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium
                     rounded-md text-gray-500 bg-white hover:bg-indigo-500 hover:text-white focus:outline-none focus:bg-indigo-100
                     active:bg-indigo-500 transition">
@@ -97,8 +96,8 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <x-jet-dropdown-link href="{{ route('appointment') }}">
-                                        {{ __('Appointment Dashboard') }}
+                                    <x-jet-dropdown-link href="{{ route('vlcascade') }}">
+                                        {{ __('Viral Load Cascade') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
                                 </div>

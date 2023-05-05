@@ -18,7 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
+Route::group(['middleware' => ['auth']], function () {
+
+    Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
@@ -28,20 +30,26 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
-Route::get('/performance', [App\Http\Controllers\HomeController::class, 'performance'])->name('performance');
+    Route::get('/performance', [App\Http\Controllers\HomeController::class, 'performance'])->name('performance');
 
-Route::get('monitoring/treatment_dashboard', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
+    Route::get('monitoring/treatment_dashboard', [App\Http\Controllers\MonitoringController::class,'treatmentDashboard'])->name('treatment');
 
-Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
 
-Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
-Route::get('monitoring/biometrics_report', [App\Http\Controllers\MonitoringController::class,'pbsDashboard'])->name('pbs');
+    Route::get('/reports/vl/vl_cascade', [App\Http\Controllers\ReportController::class,'vlcascade'])->name('vlcascade');
 
-Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
+    Route::get('monitoring/biometrics_report', [App\Http\Controllers\MonitoringController::class,'pbsDashboard'])->name('pbs');
 
-Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
+    Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
+
+    Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
+
+    Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+
+});
+
+
 
 

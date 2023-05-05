@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use App\Models\TreatmentPerformance;
+use App\Models\BiometricsPerformance;
 use Illuminate\Support\Facades\DB;
 
 class Biometrics
@@ -32,10 +32,25 @@ class Biometrics
             $mergedData2[] = $facCov[$index];
         }
 
-
-
+        $statsql = "
+            COALESCE(SUM(`active`),0) AS `active`,
+            COALESCE(SUM(`pbs`),0) AS `pbs`,
+            COALESCE(SUM(`nopbs`),0) AS `nopbs`,
+            COALESCE(SUM(`invalid`),0) AS `invalid`,
+            COALESCE(SUM(`valid`),0) AS `valid`,
+            cast(ROUND(COALESCE(SUM(`pbs`), 0) / COALESCE(SUM(`active`), 0) * 100, 0) as unsigned) AS `coverage`,
+            `ip`
+	    ";
+        $list =  BiometricsPerformance::select(DB::raw($statsql))
+            ->state($data->states)
+            ->lga($data->lgas)
+            ->facilities($data->facilities)
+            ->groupBy('ip')
+            ->withoutGlobalScopes()
+            ->first();
 
         return [
+            'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'Results' => [
                 'coveragedata' => [
                     'iPCovSeries' =>[
@@ -59,11 +74,11 @@ class Biometrics
 
     public static function ipCurr($data)
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#246D38' as `color`,
             true as `drilldown`,
             ip AS `name`,
-            CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) AS `y`
+            CAST(COALESCE(SUM(`active`),0)  AS UNSIGNED) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
@@ -82,16 +97,15 @@ class Biometrics
 
     public static function ipBiometrics($data)
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#6CB0A8' as `color`,
             true as `drilldown`,
             ip AS `name`,
-            CAST(COALESCE(SUM(`PBS` = 'Yes'),0)  AS UNSIGNED) AS `y`
+            CAST(COALESCE(SUM(`pbs`),0)  AS UNSIGNED) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('name')
             ->withoutGlobalScopes()
             ->get();
@@ -106,16 +120,15 @@ class Biometrics
 
     public static function ipCov($data)
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#ffb95e' as `color`,
             false as `drilldown`,
             ip AS `name`,
-            cast(ROUND(COALESCE(SUM(`PBS` = 'Yes'), 0) / COALESCE(SUM(`CurrentARTStatus` = 'Active'), 0) * 100, 0) as unsigned) AS `y`
+            cast(ROUND(COALESCE(SUM(`pbs`), 0) / COALESCE(SUM(`active`), 0) * 100, 0) as unsigned) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('name')
             ->withoutGlobalScopes()
             ->get();
@@ -132,13 +145,13 @@ class Biometrics
 
     public static function stateCurr($data)
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#246D38' as `color`,
             true as `drilldown`,
             stateCode AS `id`,
             ip AS `ip`,
             state as `name`,
-            CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) AS `y`
+            CAST(COALESCE(SUM(`active`),0)  AS UNSIGNED) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
@@ -157,24 +170,22 @@ class Biometrics
                 'yAxis' => 0
             ],
             'name'=>'APIN'
-
         ];
     }
 
     public static function stateBiometrics($data): array
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#6CB0A8' as `color`,
             true as `drilldown`,
             stateCode AS id,
             ip AS `ip`,
             state as `name`,
-            CAST(COALESCE(SUM(`PBS` = 'Yes'),0)  AS UNSIGNED) AS `y`
+            CAST(COALESCE(SUM(`pbs`),0)  AS UNSIGNED) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('name')
             ->groupBy('ip')
             ->withoutGlobalScopes()
@@ -189,25 +200,23 @@ class Biometrics
                 'yAxis' => 0
             ],
             'name'=>'APIN'
-
         ];
 
     }
 
     public static function stateCov($data): array
     {
-        $list =  TreatmentPerformance::select(DB::raw("
+        $list =  BiometricsPerformance::select(DB::raw("
             '#ffb95e' as `color`,
             false as `drilldown`,
             stateCode AS `id`,
             ip AS `ip`,
             state as `name`,
-            cast(ROUND(COALESCE(SUM(`PBS` = 'Yes'), 0) / COALESCE(SUM(`CurrentARTStatus` = 'Active'), 0) * 100, 0) as unsigned) AS `y`
+            cast(ROUND(COALESCE(SUM(`pbs`), 0) / COALESCE(SUM(`active`), 0) * 100, 0) as unsigned) AS `y`
         "))
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('name')
             ->groupBy('ip')
             ->withoutGlobalScopes()
@@ -222,7 +231,6 @@ class Biometrics
                 'yAxis' => 1
             ],
             'name'=>'APIN'
-
         ];
     }
 
@@ -230,7 +238,7 @@ class Biometrics
     public static function lGACurr($data): array
     {
         $stateListBar = [];
-        $stateList = TreatmentPerformance::select(DB::raw("state AS `name`"))
+        $stateList = BiometricsPerformance::select(DB::raw("state AS `name`"))
             ->lga($data->lgas)
             ->facilities($data->facilities)
             ->groupBy('stateCode')
@@ -240,13 +248,13 @@ class Biometrics
         foreach ($stateList as $index1 => $states) {
             $stateListBar[$index1]['name'] = $states->name;
 
-            $lgaList = TreatmentPerformance::select(DB::raw(
+            $lgaList = BiometricsPerformance::select(DB::raw(
                 "
             stateCode as `StateCode`,
             lga as `name`,
             lgaCode as `id`,
             true as 'drilldown',
-            CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) AS `y`"
+            CAST(COALESCE(SUM(`active`),0)  AS UNSIGNED) AS `y`"
             ))
                 ->lga($data->lgas)
                 ->facilities($data->facilities)
@@ -280,7 +288,6 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
@@ -288,7 +295,7 @@ class Biometrics
     public static function lGABiometrics($data): array
     {
         $stateListBar = [];
-        $stateList = TreatmentPerformance::select(DB::raw("state AS `name`"))
+        $stateList = BiometricsPerformance::select(DB::raw("state AS `name`"))
             ->lga($data->lgas)
             ->facilities($data->facilities)
             ->groupBy('stateCode')
@@ -298,16 +305,15 @@ class Biometrics
         foreach ($stateList  as  $index1  => $states) {
             $stateListBar[$index1]['name'] = $states->name;
 
-            $lgaList =  TreatmentPerformance::select(DB::raw(
+            $lgaList =  BiometricsPerformance::select(DB::raw(
                 "
             stateCode as `StateCode`,
             lga as `name`,
             lgaCode as `id`,
             true as 'drilldown',
-            CAST(COALESCE(SUM(`PBS` = 'Yes'),0)  AS UNSIGNED) AS `y`"
+            CAST(COALESCE(SUM(`pbs`),0)  AS UNSIGNED) AS `y`"
             ))->lga($data->lgas)->facilities($data->facilities)
                 ->where(['state' => $states->name])
-                ->where('CurrentARTStatus','=','Active')
                 ->groupBy('lga')
                 ->groupBy('lgaCode')
                 ->get();
@@ -321,7 +327,6 @@ class Biometrics
                 $lgaArray['drilldown'] = $lgas->drilldown;
                 $lgaArray['y'] = $lgas->y;
                 $drillDownLga[$index2] = $lgaArray;
-
             }
             $stateListBar[$index1]["data"] = $drillDownLga;
 
@@ -336,14 +341,13 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
     public static function lGACov($data): array
     {
         $stateListBar = [];
-        $stateList = TreatmentPerformance::select(DB::raw("state AS `name`"))
+        $stateList = BiometricsPerformance::select(DB::raw("state AS `name`"))
             ->lga($data->lgas)
             ->facilities($data->facilities)
             ->groupBy('stateCode')
@@ -353,16 +357,15 @@ class Biometrics
         foreach ($stateList  as  $index1  => $states) {
             $stateListBar[$index1]['name'] = $states->name;
 
-            $lgaList =  TreatmentPerformance::select(DB::raw(
+            $lgaList =  BiometricsPerformance::select(DB::raw(
                 "
             stateCode as `StateCode`,
             lga as `name`,
             lgaCode as `id`,
             false as 'drilldown',
-            cast(ROUND(COALESCE(SUM(`PBS` = 'Yes'), 0) / COALESCE(SUM(`CurrentARTStatus` = 'Active'), 0) * 100, 0) as unsigned) AS `y`"
+            cast(ROUND(COALESCE(SUM(`pbs`), 0) / COALESCE(SUM(`active`), 0) * 100, 0) as unsigned) AS `y`"
             ))->lga($data->lgas)->facilities($data->facilities)
                 ->where(['state' => $states->name])
-                ->where('CurrentARTStatus','=','Active')
                 ->groupBy('lga')
                 ->groupBy('lgaCode')
                 ->get();
@@ -391,7 +394,6 @@ class Biometrics
                 'name' => $states->name
             ];
         }
-
         return $graphData;
     }
 
@@ -400,14 +402,14 @@ class Biometrics
         $graphData = [];
         $lgaList = [];
 
-        $query = TreatmentPerformance::select(DB::raw("
+        $query = BiometricsPerformance::select(DB::raw("
         lgaCode as `LgaCode`,
         lga as `lga`,
         facility_name as `name`,
         datim_code as `id`,
         false as 'drilldown',
         '#246D38' as `color`,
-        CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) AS `y`
+        CAST(COALESCE(SUM(`active`),0)  AS UNSIGNED) AS `y`
     "))
             ->lga($data->lgas)
             ->facilities($data->facilities)
@@ -431,7 +433,6 @@ class Biometrics
                 'y' => $item->y
             ];
         }
-
         foreach ($lgaList as $lgaCode => $lgaData) {
             $graphData[] = [
                 'data' => [
@@ -444,7 +445,6 @@ class Biometrics
                 'name' => $lgaData['name']
             ];
         }
-
         return $graphData;
     }
 
@@ -454,18 +454,17 @@ class Biometrics
         $graphData = [];
         $lgaList = [];
 
-        $query = TreatmentPerformance::select(DB::raw("
+        $query = BiometricsPerformance::select(DB::raw("
         lgaCode as `LgaCode`,
         lga as `lga`,
         facility_name as `name`,
         datim_code as `id`,
         false as 'drilldown',
         '#6CB0A8' as `color`,
-        CAST(COALESCE(SUM(`PBS` = 'Yes'),0)  AS UNSIGNED) AS `y`
+        CAST(COALESCE(SUM(`pbs`),0)  AS UNSIGNED) AS `y`
     "))
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('LgaCode')
             ->groupBy('facility_name')
             ->get();
@@ -508,18 +507,17 @@ class Biometrics
         $graphData = [];
         $lgaList = [];
 
-        $query = TreatmentPerformance::select(DB::raw("
+        $query = BiometricsPerformance::select(DB::raw("
         lgaCode as `LgaCode`,
         lga as `lga`,
         facility_name as `name`,
         datim_code as `id`,
         false as 'drilldown',
         '#ffb95e' as `color`,
-        cast(ROUND(COALESCE(SUM(`PBS` = 'Yes'), 0) / COALESCE(SUM(`CurrentARTStatus` = 'Active'), 0) * 100, 0) as unsigned) AS `y`
+        cast(ROUND(COALESCE(SUM(`pbs`), 0) / COALESCE(SUM(`active`), 0) * 100, 0) as unsigned) AS `y`
     "))
             ->lga($data->lgas)
             ->facilities($data->facilities)
-            ->where('CurrentARTStatus','=','Active')
             ->groupBy('LgaCode')
             ->groupBy('facility_name')
             ->get();
@@ -553,16 +551,6 @@ class Biometrics
                 'name' => $lgaData['name']
             ];
         }
-
         return $graphData;
     }
-
-
-
-
-
-
-
-
-
 }
