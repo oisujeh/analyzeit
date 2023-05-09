@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Biometrics Dashboard</title>
+    <title>VL Dashboard</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -21,9 +21,9 @@
 
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Styles -->
+<!-- Styles -->
 
     <script src="{{asset('code/highcharts.js')}}"></script>
     <script src="{{asset('code/modules/pareto.js')}}"></script>
@@ -33,7 +33,8 @@
     <script src="http://github.highcharts.com/f808ab117823082ca137fab775cbdf52cce27b90/modules/offline-exporting.src.js"></script>
     <script src="{{asset('code/modules/accessibility.js')}}"></script>
     <script src="{{asset('code/modules/drilldown.js')}}"></script>
-    <script src="{{asset('assets/PBShighcharts-utils.js')}}"></script>
+    <script src="{{asset('assets/highcharts-utils.js')}}"></script>
+    <script src="{{asset('assets/vlc-highcharts-utils.js')}}"></script>
 
 
 
@@ -65,19 +66,19 @@
 <x-jet-banner />
 
 <div class="min-h-screen bg-gray-100">
-    @livewire('navigation-menu')
+@livewire('navigation-menu')
 
-    <!-- Page Heading -->
+<!-- Page Heading -->
     @if (isset($header))
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </div>
         </header>
-    @endif
+@endif
 
 
-    <!-- Page Content -->
+<!-- Page Content -->
     <main>
         <div class="flex items-center justify-center" id="loading" style="display:none">
             <div class="inline-block h-8 w-8 animate-[spinner-grow_0.75s_linear_infinite] rounded-full bg-current align-[-0.125em]
@@ -106,16 +107,15 @@
 
                             <div class="col-span-6 sm:col-span-3">
                                 <label for="directorate" class="block text-sm text-gray-500 mt-3">
-                                    <i class="uil uil-list-ul"></i> Select MER Indicator
+                                    <i class="uil uil-list-ul"></i> Select Dataset
                                 </label>
 
                                 <select id="selectIndicator" name="selectIndicator" class="select2 mt-1 block w-full py-2 px-3
                                 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500
                                 focus:border-indigo-500 sm:text-sm">
                                     <option value="" disabled selected></option>
-                                    <option value="coverage">Biometrics Coverage</option>
-                                    <option value="tx_curr">Treatment Current</option>
-                                    <option value="pvls">Treatment PVLS</option>
+                                    <option value="vl">VL Cascade</option>
+                                    <option value="samp">Sample Collection</option>
                                 </select>
                             </div>
 
@@ -158,6 +158,27 @@
                                 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" data-toggle="select2" multiple="multiple">
                                 </select>
                             </div>
+                            <div id="div1">
+                                <div class="col-span-6 sm:col-span-3 mt-5">
+                                    <label for="cat" class="block text-sm text-gray-500">
+                                        <i class="uil uil-schedule"></i> From Date
+                                    </label>
+                                    <input type="date" name="start_date" id="start_date" readonly
+                                           class="mt-1 focus:ring-indigo-500 w-full
+                                               shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                    />
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3 mt-5 ">
+                                    <label for="cat" class="block text-sm text-gray-500">
+                                        <i class="uil uil-schedule"></i> To Date
+                                    </label>
+                                    <input type="date" name="end_date" id="end_date" readonly
+                                           class="mt-1 focus:ring-indigo-500 block
+                                           w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                    />
+                                </div>
+                            </div>
 
                             <div class="col-span-6 sm:col-span-3 mt-5 text-left">
                                 <button class="inline-flex justify-center py-2 px-4 border border-transparent
@@ -195,14 +216,28 @@
 
 <script type="text/javascript">
     var baseUrlApi = '<?php echo URL::to('/api').'/';?>';
-    var baseUrlWiget = '<?php echo URL::to('/api').'/pbs-widget/';?>';
+    var baseUrlWiget = '<?php echo URL::to('/api').'/vl-widget/';?>';
 
-    let uri = baseUrlWiget+'coverage';
-    $('#report_containner').load(uri);
+    const dropdown = document.getElementById("selectIndicator");
+
+    var today = new Date().toISOString().slice(0, 10);
+    // Set the value of the date field to the current date
+    document.getElementById("end_date").value = today;
+
+    var month = new Date();
+    // Set the day of the date object to 1
+    month.setDate(1);
+
+    // Get the date in YYYY-MM-DD format
+    var firstDayOfMonth = month.toISOString().slice(0, 10);
+    document.getElementById("start_date").value = firstDayOfMonth;
+
+    $('#report_containner').load(baseUrlWiget);
 
     $(".e2").select2({
         allowClear: true
     });
+
 
     $(document).ready(function(){
         $("#filters").submit(function(event){
@@ -236,33 +271,59 @@
                 value: facility
             });
             $(".tx_curr").html('...')
-            $(".tx_captured").html('...')
-            $(".tx_coverage").html('...')
-            $(".tx_valid").html('...')
-            $(".tx_invalid").html('...')
-            $(".tx_not_captured").html('...')
+            $(".tx_facilities").html('...')
+            $(".tx_states").html('...')
+            $(".tx_lgas").html('...')
 
             console.log(formData);
 
             $.ajax({
                 type: "POST",
-                url: "{{route('pbs.filter')}}",
+                url: "{{route('treatment.filter')}}",
                 data: formData,
                 dataType: 'json',
                 encode: true,
             }).done(function(data){
+                selectReports
                 var response = data.treatment_perfomance;
 
-                if (selectReports.val() === 'coverage') {
+                if (res != undefined) {
+                    if (indicator === 'sample_collection_new') {
+                        populateSampleCollectionOfEligible(res);
+                        populateKeyMetric(res);
+                        populateResultReceived(res);
+                        createNationalStackedChartDrilldownChart('vlComparativeViewByState', '', 'sample_collection_new',
+                            res.sampleNationalColChartData.stateNatLevelSampleSeries, res.sampleNationalColChartData.lGASampleSeries,
+                            res.sampleNationalColChartData.facilitySampleSeries);
+                        createStackedChartDrilldownChartIP('vlComparativeViewByIP', '', 'sample_collection_new',
+                            res.sampleColChartData.iPSampleSeries, res.sampleColChartData.stateSampleSeries,
+                            res.sampleColChartData.lGASampleSeries, res.sampleColChartData.facilitySampleSeries);
+                        createWeeklySampleCollectionTrendOverChart('vlTrendOverTimeChart', res);
+                    } else if (indicator === 'vl_cascade_new') {
+                        populateKeyMetricVL_Cascade(res);
+                        populateViralLoadCoverageOverview(res);
+                        populateViralLoadSuppressionOverview(res);
+                        createNationalStackedChartDrilldownChart('vlComparativeViewByState', '', 'vl_cascade_new',
+                            res.vlNationalChartData.stateNatLevelVLSeries, res.vlNationalChartData.lGAVLSeries,
+                            res.vlNationalChartData.facilityVLSeries);
+                        createNationalStackedChartDrilldownChart('vlSuppressionComparativeViewByState', '', 'vl_cascade_new',
+                            res.vlSuppressionNationalChartData.stateNatLevelVLSupSeries, res.vlSuppressionNationalChartData.lGAVLSupSeries,
+                            res.vlSuppressionNationalChartData.facilityVLSupSeries);
 
-                    $(".tx_curr").html(Number(response.active).toLocaleString())
-                    $(".tx_captured").html(Number(response.pbs).toLocaleString())
-                    $(".tx_coverage").html(Number(response.coverage).toLocaleString())
-                    $(".tx_valid").html(Number(response.valid).toLocaleString())
-                    $(".tx_invalid").html(Number(response.invalid).toLocaleString())
-                    $(".tx_not_captured").html(Number(response.nopbs).toLocaleString())
-                    console.log(data)
-                    build_coverage_analytics(data);
+                        createStackedChartDrilldownChartIP('vlComparativeViewByIP', '', 'vl_cascade_new',
+                            res.vlChartData.iPVLSeries, res.vlChartData.stateVLSeries,
+                            res.vlChartData.lGAVLSeries, res.vlChartData.facilityVLSeries);
+
+                        createStackedChartDrilldownChartIP('vlSuppressionComparativeViewByIP', '', 'vl_cascade_new',
+                            res.vlSuppressionChartData.iPVLSupSeries, res.vlSuppressionChartData.stateVLSupSeries,
+                            res.vlSuppressionChartData.lGAVLSupSeries, res.vlSuppressionChartData.facilityVLSupSeries);
+
+                        createWeeklyCoverageTrendOverChart('vlCoverageWeeklyTrendDiv', res);
+
+                        createWeeklySuppressionTrendOverChart('vlSuppressionWeeklyTrendDiv', res);
+                    }
+                } else {
+                    alert("No data could be retrieved. Please review your filter parameters and try again");
                 }
                 console.log(data);
             }).fail(function(xhr) {
@@ -278,50 +339,9 @@
             event.preventDefault();
         });
     });
-</script>
-
-<script>
-    function downloadPng(containerId) {
-        var chart = $('#' + containerId).highcharts();
-        if (chart != null) {
-            chart.exportChartLocal({ type: 'image/png' })
-        }
-    }
-
-    function build_coverage_analytics(data) {
-        var pbs_analysis = data.Results;
-
-        createStackedChartDrilldownChartIP(
-            "totalpbs",
-            '',
-            pbs_analysis.coveragedata.iPCovSeries,
-            pbs_analysis.coveragedata.stateCovSeries,
-            pbs_analysis.coveragedata.lGACovSeries,
-            pbs_analysis.coveragedata.facilityCovSeries,
-        )
-
-        /*build_clustered_bar_dual_axis(
-            "GP_KP_Analysis",
-            '',
-            'Number',
-            '% Coverage',
-            null,
-            pbs_analysis.pbs_GP_KP_data,
-            //['#488960', '#ffb95e', '#b2431d']
-            ['#488960', '#b2431d', '#b2431d']
-        );
-
-        createStackedChartDrilldownChartIP(
-            "coverage_gap",
-            '',
-            pbs_analysis.coveragedata.iPGapSeries,
-            pbs_analysis.coveragedata.stateGapSeries,
-            pbs_analysis.coveragedata.lGAGapSeries,
-            pbs_analysis.coveragedata.facilityGapSeries,
-        );*/
-    }
-
 
 </script>
+
+
 </body>
 </html>

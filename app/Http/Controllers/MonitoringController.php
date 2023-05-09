@@ -77,6 +77,11 @@ class MonitoringController extends Controller
         return view('monitoring.biometrics_report');
     }
 
+    public function vlDashboard()
+    {
+        return view('monitoring.vl');
+    }
+
 
 
 }
