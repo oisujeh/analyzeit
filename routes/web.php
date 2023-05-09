@@ -47,8 +47,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
 
     Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
+    Route::get('/upload', [App\Http\Controllers\UploadController::class,'index']);
+    Route::get('/progress', [App\Http\Controllers\UploadController::class,'progress']);
+    Route::post('/upload/file', [App\Http\Controllers\UploadController::class,'uploadFile'])->name('processFile');
+    Route::get('/progress/data', [App\Http\Controllers\UploadController::class,'progressUpload'])->name('csvStoreProcess');
 
 });
+
+
+
+Route::get('phpinfo', fn () => phpinfo());
 
 
 

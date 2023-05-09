@@ -51,8 +51,8 @@ Route::post('/treatment-filter', function(Request $request) {
 Route::post('/quality-care', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     return match ($selectIndicator) {
-        'regimen' => Helper::regimenGraph($request, $request->selectIndicator),
-        'ped_regimen' => Helper::pedregimenGraph($request, $selectIndicator),
+        'regimen' => Helper::regimenGraph($request),
+        'ped_regimen' => Helper::pedregimenGraph($request),
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('quality.filter');
@@ -175,3 +175,4 @@ Route::get('/getLogs', function(Request $request){
     }
     return "success";
 })->name('getLogs');
+
