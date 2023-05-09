@@ -52,6 +52,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/upload/file', [App\Http\Controllers\UploadController::class,'uploadFile'])->name('processFile');
     Route::get('/progress/data', [App\Http\Controllers\UploadController::class,'progressUpload'])->name('csvStoreProcess');
 
+    Route::get('monitoring/vl', [App\Http\Controllers\MonitoringController::class,'vlDashboard'])->name('vldashboard');
+
+
 });
 
 

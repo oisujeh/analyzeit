@@ -89,6 +89,10 @@ Route::get('/pbs-widget/{id}', function($page){
     return View::make('monitoring.pbs.'.$page);
 });
 
+Route::get('/vl-widget/{id}', function($page){
+    return View::make('monitoring.vl.'.$page);
+});
+
 Route::get('/sendSMS', function(Request $request){
     $appointment = DB::table('next_day_appointments')
         ->where(['status'=>0])
