@@ -48,6 +48,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
 
+    Route::get('monitoring/vl', [App\Http\Controllers\MonitoringController::class,'vlDashboard'])->name('vldashboard');
+
+
 });
 
 
