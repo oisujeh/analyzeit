@@ -18,6 +18,8 @@
               type="text/css" />
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.0/css/line.css">
 
+        <link rel="stylesheet" href="https://bootswatch.com/5/minty/bootstrap.min.css">
+
 
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -91,6 +93,8 @@
         <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
         <script src="{{asset('assets/highcharts-utils.js')}}"></script>
         <script src="{{asset('./assets/vendor/preline/dist/preline.js')}}"></script>
+
+
         @yield('footer_scripts')
     </body>
 </html>
