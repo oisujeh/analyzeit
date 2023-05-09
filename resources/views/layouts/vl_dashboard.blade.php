@@ -242,7 +242,7 @@
     $(document).ready(function(){
         $("#filters").submit(function(event){
             $('#loading').show();
-            let selectReports = $('#selectIndicator');
+            let selectReports = $('#selectIndicator').val();
 
             var state = [];
             $('#state :selected').each(function(){
@@ -275,20 +275,18 @@
             $(".tx_states").html('...')
             $(".tx_lgas").html('...')
 
-            console.log(formData);
+            //console.log(formData);
 
             $.ajax({
                 type: "POST",
-                url: "{{route('treatment.filter')}}",
+                url: "{{route('vl.filter')}}",
                 data: formData,
                 dataType: 'json',
                 encode: true,
             }).done(function(data){
-                selectReports
-                var response = data.treatment_perfomance;
-
-                if (res != undefined) {
-                    if (indicator === 'sample_collection_new') {
+                let res = data?.result;
+                if (res !== undefined) {
+                    if (selectReports === 'sample_collection_new') {
                         populateSampleCollectionOfEligible(res);
                         populateKeyMetric(res);
                         populateResultReceived(res);
@@ -299,10 +297,11 @@
                             res.sampleColChartData.iPSampleSeries, res.sampleColChartData.stateSampleSeries,
                             res.sampleColChartData.lGASampleSeries, res.sampleColChartData.facilitySampleSeries);
                         createWeeklySampleCollectionTrendOverChart('vlTrendOverTimeChart', res);
-                    } else if (indicator === 'vl_cascade_new') {
+                    } else if (selectReports === 'vl') {
                         populateKeyMetricVL_Cascade(res);
                         populateViralLoadCoverageOverview(res);
                         populateViralLoadSuppressionOverview(res);
+                        /*
                         createNationalStackedChartDrilldownChart('vlComparativeViewByState', '', 'vl_cascade_new',
                             res.vlNationalChartData.stateNatLevelVLSeries, res.vlNationalChartData.lGAVLSeries,
                             res.vlNationalChartData.facilityVLSeries);
@@ -320,7 +319,7 @@
 
                         createWeeklyCoverageTrendOverChart('vlCoverageWeeklyTrendDiv', res);
 
-                        createWeeklySuppressionTrendOverChart('vlSuppressionWeeklyTrendDiv', res);
+                        createWeeklySuppressionTrendOverChart('vlSuppressionWeeklyTrendDiv', res);*/
                     }
                 } else {
                     alert("No data could be retrieved. Please review your filter parameters and try again");

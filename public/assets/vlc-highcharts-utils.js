@@ -1585,9 +1585,7 @@ function CreateKeyMetricBarChart(container, title, categories, yAxisTitle, serie
             text: title
         },
         subtitle: {
-            text: 'Source: <a ' +
-                'href="https://ndr.phis3project.org.ng"' +
-                'target="_blank">NDR</a>'
+            text: 'Source: NMRS'
         },
         xAxis: {
             categories: categories,
@@ -1968,6 +1966,7 @@ function populateKeyMetricVL_Cascade(data) {
             }
         ]
     }];
+    console.log('Here here here')
     CreateKeyMetricBarChart('VL_Cascade_KeyMetric', '', categories, 'Number of Individuals', Obj)
     //const Obj = [{
     //    name: ["Key Metric"], type: 'column',

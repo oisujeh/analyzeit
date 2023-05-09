@@ -9,6 +9,7 @@ use App\Helpers\Treatment_new as Helper1;
 use App\Helpers\VL as Helper2;
 use App\Helpers\Mortality as Helper3;
 use App\Helpers\Biometrics as Helper4;
+use App\Helpers\VLAnalytics as Helper5;
 use Illuminate\Support\Facades\View;
 
 
@@ -44,6 +45,18 @@ Route::post('/treatment-filter', function(Request $request) {
             return response()->json(['error' => 'Invalid selectIndicator value'], 400);
     }
 })->name('treatment.filter');
+
+
+Route::post('/vl-filter', function(Request $request) {
+    $selectIndicator = $request->selectIndicator;
+    switch($selectIndicator) {
+        case 'vl':
+            return Helper5::vl_analytics($request, $selectIndicator);
+        default:
+            // Handle unexpected selectIndicator value
+            return response()->json(['error' => 'Invalid selectIndicator value'], 400);
+    }
+})->name('vl.filter');
 
 
 
