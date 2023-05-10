@@ -301,6 +301,12 @@
                         populateKeyMetricVL_Cascade(res);
                         populateViralLoadCoverageOverview(res);
                         populateViralLoadSuppressionOverview(res);
+                        createStackedChartDrilldownChartIP('vlComparativeViewByIP', '', 'vl',
+                            res.vlChartData.iPVLSeries, res.vlChartData.stateVLSeries,
+                            res.vlChartData.lGAVLSeries, res.vlChartData.facilityVLSeries);
+                        createStackedChartDrilldownChartIP('vlSuppressionComparativeViewByIP', '', 'vl',
+                            res.vlSuppressionChartData.iPVLSupSeries, res.vlSuppressionChartData.stateVLSupSeries,
+                            res.vlSuppressionChartData.lGAVLSupSeries, res.vlSuppressionChartData.facilityVLSupSeries);
                         /*
                         createNationalStackedChartDrilldownChart('vlComparativeViewByState', '', 'vl_cascade_new',
                             res.vlNationalChartData.stateNatLevelVLSeries, res.vlNationalChartData.lGAVLSeries,
@@ -309,9 +315,7 @@
                             res.vlSuppressionNationalChartData.stateNatLevelVLSupSeries, res.vlSuppressionNationalChartData.lGAVLSupSeries,
                             res.vlSuppressionNationalChartData.facilityVLSupSeries);
 
-                        createStackedChartDrilldownChartIP('vlComparativeViewByIP', '', 'vl_cascade_new',
-                            res.vlChartData.iPVLSeries, res.vlChartData.stateVLSeries,
-                            res.vlChartData.lGAVLSeries, res.vlChartData.facilityVLSeries);
+
 
                         createStackedChartDrilldownChartIP('vlSuppressionComparativeViewByIP', '', 'vl_cascade_new',
                             res.vlSuppressionChartData.iPVLSupSeries, res.vlSuppressionChartData.stateVLSupSeries,

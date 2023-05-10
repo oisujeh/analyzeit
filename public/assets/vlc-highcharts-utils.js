@@ -1530,23 +1530,7 @@ function createNationalStackedChartDrilldownChart(container, title = '', indicat
     }
 }
 
-// Done
-function populate_ribbons(facilities, states, lgas, ips) {
-    $("#ribbon-patients").attr("data-end", facilities);
-    $("#ribbon-patients").text(facilities.toLocaleString());
 
-    $("#ribbon-lgas").attr("data-end", lgas);
-    $("#ribbon-lgas").text(lgas);
-
-    $("#ribbon-facilities").attr("data-end", facilities.toLocaleString());
-    $("#ribbon-facilities").text(facilities);
-
-    $("#ribbon-states").attr("data-end", states);
-    $("#ribbon-states").text(states);
-
-    $("#ribbon-ips").attr("data-end", ips);
-    $("#ribbon-ips").text(ips);
-}
 
 // Key Metric
 function populateKeyMetric(data) {
@@ -1968,32 +1952,6 @@ function populateKeyMetricVL_Cascade(data) {
     }];
     console.log('Here here here')
     CreateKeyMetricBarChart('VL_Cascade_KeyMetric', '', categories, 'Number of Individuals', Obj)
-    //const Obj = [{
-    //    name: ["Key Metric"], type: 'column',
-    //    data: [
-    //        {
-    //            name: "Patient on ART",
-    //            y: vlcData.totalRecord
-
-    //        }, {
-    //            name: "Eligible",
-    //            y: vlcData.eligibleNo
-
-    //        }, {
-    //            name: "Results Received",
-    //            y: vlcData.vL_SampleResultReceived
-
-    //        }, {
-    //            name: "Suppressed",
-    //            y: vlcData.vL_SuppressedFromResultRate
-
-    //        }
-    //    ]
-    //},];
-
-    //var colors = ['#494FA3', '#FFB913'];
-    //plot_vlc_cascade_charts_VL_Cascade_KeyMetric("VL_Cascade_KeyMetric", '', '', Obj, colors, ['Patient on ART', 'Eligible', 'Results Recived', 'Suppressed']);
-
 }
 
 // Viral Load coverage
@@ -2014,21 +1972,7 @@ function populateViralLoadCoverageOverview(data) {
     //plot_vl_cascade_viral_Load_Coverage_BuildDonut("viral_Load_Coverage", '', obj, colors);
 }
 
-/*
- *
- *  var vlcData = data.sampleCollectionOfEligible;
-    const obj = [
-        {
-            name: "Sample Collected",
-            y: vlcData.vL_SampleCollected
-        },
-        {
-            name: "Sample Not Yet Collected",
-            y: vlcData.vL_SamplesNotCollected
-        }];
-    var colors = ['#246D38', 'rgb(158, 159, 163)'];
-    plot_vlc_BuildDonut("SampleCollectionEligible", '', obj, colors);
- * */
+
 
 // Viral Load Suppression
 function populateViralLoadSuppressionOverview(data) {
@@ -2053,54 +1997,4 @@ function populateViralLoadSuppressionOverview(data) {
 
 
 
-//function populateComparativeViewByState(data) {
-//    var vlcData = data.comparativeViewState;
-//    const Obj = [{
-//        name: ["Comparative View By State"], type: 'column',
-//        data: [
-//            {
-//                name: "Sample Collected",
-//                y: vlcData.vL_SampleCollectedgroupedStateSum.states,
-//                //drilldown: 'vL_SampleCollectedgroupedStateSum'
 
-//            }, {
-//                name: "Samples Not Collected",
-//                y: vlcData.vL_SampleNotCollectedgroupedStateSum.states
-
-//            }
-//            //, {
-//            //    name: "Suppressed From Collection Rate",
-//            //    y: vlcData.vL_SuppressedFromCollectionRateStateSum
-
-//            //}
-//        ]
-//    },];
-
-//    var colors = ['#ebb7b9', '#FFB913', '#2cffff'];
-//    plot_vlc_cascade_charts_states("vlComparativeViewByState", '', '', Obj, colors, ['Sample Collected', 'Samples Not Collected', 'Suppressed From Collection Rate']);
-//}
-
-//function populateComparativeViewByIP(data) {
-//    var vlcData = data.comparativeViewIP;
-//    const Obj = [{
-//        name: ["Comparative View By IP"], type: 'column',
-//        data: [
-//            {
-//                name: "Sample Collected",
-//                y: vlcData.vL_SampleCollectedgroupedSIPSum
-
-//            }, {
-//                name: "Samples Not Collected",
-//                y: vlcData.vL_SampleNotCollectedgroupedIPSum
-
-//            }, {
-//                name: "Suppressed From Collection Rate",
-//                y: vlcData.vL_SuppressedFromCollectionRateIPSum
-//            }
-//        ]
-//    },];
-
-//    var colors = ['#494FA3', '#FFB913'];
-//    plot_vlc_cascade_charts_ips("vlComparativeViewByIP", '', '', Obj, colors, ['Sample Collected', 'Samples Not Collected', 'Suppressed From Collection Rate']);
-
-//}

@@ -150,7 +150,7 @@
             Viral Load Coverage By State
         </div>
         <div class="box-content">
-            <div class="chart" id="drilldownBar">
+            <div class="chart" id="vlComparativeViewByIP">
             </div>
         </div>
     </div>
@@ -163,7 +163,7 @@
             Viral Load Suppression By State
         </div>
         <div class="box-content">
-            <div class="chart" id="drilldownBar">
+            <div class="chart" id="vlSuppressionComparativeViewByIP">
             </div>
         </div>
     </div>

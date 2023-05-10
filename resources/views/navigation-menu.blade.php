@@ -47,6 +47,10 @@
                                         <i class="uil uil-chart-line mr-2"></i>{{ __('Quality of Care') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
+                                    <x-jet-dropdown-link href="{{ route('vldashboard') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-hourglass mr-2"></i>{{ __('VL') }}
+                                    </x-jet-dropdown-link>
+                                    <div class="border-t border-gray-100"></div>
                                     <x-jet-dropdown-link href="{{ route('mortality') }}" class="hover:text-blue-600">
                                         <i class="uil uil-exclamation-triangle mr-2"></i>{{ __('Mortality Surveillance') }}
                                     </x-jet-dropdown-link>

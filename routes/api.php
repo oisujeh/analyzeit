@@ -58,9 +58,6 @@ Route::post('/vl-filter', function(Request $request) {
     }
 })->name('vl.filter');
 
-
-
-
 Route::post('/quality-care', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     return match ($selectIndicator) {
@@ -80,7 +77,6 @@ Route::post('/mortality', function(Request $request){
     };
 })->name('mortality.filter');
 
-
 Route::post('/pbs', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     return match ($selectIndicator) {
@@ -88,7 +84,6 @@ Route::post('/pbs', function(Request $request){
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('pbs.filter');
-
 
 Route::get('/get-wiget/{id}', function($page){
     return View::make('monitoring.reports.'.$page);
