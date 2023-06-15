@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-jet-application-mark class="block h-9 w-auto" />
+                        <img src="{{asset('assets/image/logo.jpeg')}}" class="block h-10 w-auto" alt="Here">
                     </a>
                 </div>
 
@@ -45,6 +45,10 @@
                                     <div class="border-t border-gray-100"></div>
                                     <x-jet-dropdown-link href="{{ route('regimen') }}" class="hover:text-blue-600">
                                         <i class="uil uil-chart-line mr-2"></i>{{ __('Quality of Care') }}
+                                    </x-jet-dropdown-link>
+                                    <div class="border-t border-gray-100"></div>
+                                    <x-jet-dropdown-link href="{{ route('vldashboard') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-hourglass mr-2"></i>{{ __('VL') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
                                     <x-jet-dropdown-link href="{{ route('mortality') }}" class="hover:text-blue-600">

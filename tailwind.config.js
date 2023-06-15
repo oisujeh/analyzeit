@@ -28,8 +28,9 @@ module.exports = {
                 veryDarkBlue: 'hsl(223, 12%, 13%)',
                 veryPaleRed: 'hsl(13, 100%, 96%)',
                 veryLightGray: 'hsl(0, 0%, 98%)',
-                brightGreenLight: 'hsl(142,95%,46%)',
-                brightGreen: 'hsl(149,90%,15%)',
+                brightGreenLight: 'rgb(92,198,208)',
+                brightGreen: 'rgb(168,207,69)',
+                brightBlue: 'rgb(16,88,118)',
             },
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],

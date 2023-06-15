@@ -9,6 +9,7 @@ use App\Helpers\Treatment_new as Helper1;
 use App\Helpers\VL as Helper2;
 use App\Helpers\Mortality as Helper3;
 use App\Helpers\Biometrics as Helper4;
+use App\Helpers\VLAnalytics as Helper5;
 use Illuminate\Support\Facades\View;
 
 
@@ -46,13 +47,22 @@ Route::post('/treatment-filter', function(Request $request) {
 })->name('treatment.filter');
 
 
-
+Route::post('/vl-filter', function(Request $request) {
+    $selectIndicator = $request->selectIndicator;
+    switch($selectIndicator) {
+        case 'vl':
+            return Helper5::vl_analytics($request, $selectIndicator);
+        default:
+            // Handle unexpected selectIndicator value
+            return response()->json(['error' => 'Invalid selectIndicator value'], 400);
+    }
+})->name('vl.filter');
 
 Route::post('/quality-care', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     return match ($selectIndicator) {
-        'regimen' => Helper::regimenGraph($request, $request->selectIndicator),
-        'ped_regimen' => Helper::pedregimenGraph($request, $selectIndicator),
+        'regimen' => Helper::regimenGraph($request),
+        'ped_regimen' => Helper::pedregimenGraph($request),
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('quality.filter');
@@ -67,7 +77,6 @@ Route::post('/mortality', function(Request $request){
     };
 })->name('mortality.filter');
 
-
 Route::post('/pbs', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     return match ($selectIndicator) {
@@ -75,7 +84,6 @@ Route::post('/pbs', function(Request $request){
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('pbs.filter');
-
 
 Route::get('/get-wiget/{id}', function($page){
     return View::make('monitoring.reports.'.$page);
@@ -179,3 +187,4 @@ Route::get('/getLogs', function(Request $request){
     }
     return "success";
 })->name('getLogs');
+

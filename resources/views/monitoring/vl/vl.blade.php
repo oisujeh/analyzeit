@@ -59,8 +59,7 @@
             </div>
         </div>
         <div class="box-content">
-            <div class="chart" id="VL_Cascade_KeyMetric">
-            </div>
+            <div class="chart" id="VL_Cascade_KeyMetric"></div>
         </div>
     </div>
 </div>
@@ -100,7 +99,7 @@
             </div>
         </div>
         <div class="box-content">
-            <div class="chart" id="sexChart">
+            <div class="chart" id="viral_Load_Coverage">
             </div>
         </div>
     </div>
@@ -137,7 +136,7 @@
             </div>
         </div>
         <div class="box-content">
-            <div class="chart" id="ageChart">
+            <div class="chart" id="viral_Load_Suppression">
             </div>
         </div>
     </div>
@@ -151,7 +150,7 @@
             Viral Load Coverage By State
         </div>
         <div class="box-content">
-            <div class="chart" id="drilldownBar">
+            <div class="chart" id="vlComparativeViewByIP">
             </div>
         </div>
     </div>
@@ -164,7 +163,7 @@
             Viral Load Suppression By State
         </div>
         <div class="box-content">
-            <div class="chart" id="drilldownBar">
+            <div class="chart" id="vlSuppressionComparativeViewByIP">
             </div>
         </div>
     </div>

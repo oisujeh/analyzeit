@@ -21,7 +21,8 @@
     <div class="flex items-center justify-between">
         <div class="pt-2">
             <a href="index.html">
-                <img src="https://raw.githubusercontent.com/oisujeh/trainsmart1/b92d4b5ed844cb6e8146695b3da0e3f3ee9117de/public/assets/img/logo.svg" alt="logo" class="h-12">
+                <img src="{{asset('assets/image/logo.jpeg')}}" class="block h-25" alt="Here">
+
             </a>
         </div>
         <!-- <div class="hidden md:flex space-x-6">
@@ -36,12 +37,12 @@
             @if (Route::has('login'))
                 @auth
                     <a href="{{ url('/dashboard') }}"
-                       class="md:block p-3 px-6 pt-2 text-white bg-darkBlue rounded-full baseline hover:bg-veryDarkBlue">
+                       class="md:block p-3 px-6 pt-2 pb-2 text-white bg-brightGreen rounded-full baseline hover:bg-veryDarkBlue">
                         Dashboard
                     </a>
                 @else
                     <a href="{{ route('login') }}"
-                       class="md:block p-3 px-6 pt-2 text-white bg-darkBlue rounded-full baseline hover:bg-veryDarkBlue">
+                       class="md:block p-3 px-6 pt-2 pb-2 text-white bg-brightGreen rounded-full baseline hover:bg-veryDarkBlue">
                         Log In
                     </a>
                 @endauth
@@ -67,12 +68,12 @@
             @if (Route::has('login'))
                 @auth
                     <a href="{{ url('/dashboard') }}"
-                       class="md:block p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight">
+                       class="md:block p-3 px-6 pt-2 pb-2 text-white bg-brightGreen rounded-full baseline hover:bg-veryDarkBlue">
                         Dashboard
                     </a>
                 @else
                     <a href="{{ route('login') }}"
-                       class="md:block p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight">
+                       class="md:block p-3 px-6 pt-2 pb-2 text-white bg-brightGreen rounded-full baseline hover:bg-veryDarkBlue">
                         Log In
                     </a>
                 @endauth
@@ -89,7 +90,7 @@
                 Bring everyone together to build better products
             </h1>
             <p class="max-w-sm text-center textdarkGrayishBlue md:text-left">
-                Manage makes it simple for software teams to plan day-to-day tasks and get work done faster.
+                K4Action makes it simple for teams to plan.
             </p>
             <!-- <div class="flex justify-center md:justify-start">
                 <a href="#"
@@ -100,7 +101,7 @@
         </div>
         <!---Image -->
         <div class="md:w-1/2">
-            <img src="https://raw.githubusercontent.com/oisujeh/trainsmart1/b92d4b5ed844cb6e8146695b3da0e3f3ee9117de/public/assets/img/illustration-intro.svg" alt="illustration">
+            <img src="{{asset('assets/image/illustration.jpg')}}" class="z-0" alt="illustration">
 
         </div>
     </div>
@@ -120,9 +121,9 @@
         </div>
         <div class="flex flex-col spacepace-y-8 md:w-1/2">
             <div class="flex flex-col space-y-3 md:space-y-0 md:space-x-6 md:flex-row">
-                <div class="rounded l-full bg-brightRedSupLight md:bg-transparent">
+                <div class="rounded l-full bg-brightGreenLight md:bg-transparent">
                     <div class="flex items-center space-x-2">
-                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightRed">
+                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightGreen">
                             01
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
@@ -142,9 +143,9 @@
                 </div>
             </div>
             <div class="flex flex-col space-y-3 md:space-y-0 md:space-x-6 md:flex-row">
-                <div class="rounded l-full bg-brightRedSupLight md:bg-transparent">
+                <div class="rounded l-full bg-brightGreenLight md:bg-transparent">
                     <div class="flex items-center space-x-2">
-                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightRed">
+                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightGreen">
                             02
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
@@ -164,9 +165,9 @@
                 </div>
             </div>
             <div class="flex flex-col space-y-3 md:space-y-0 md:space-x-6 md:flex-row">
-                <div class="rounded l-full bg-brightRedSupLight md:bg-transparent">
+                <div class="rounded l-full bg-brightGreenLight md:bg-transparent">
                     <div class="flex items-center space-x-2">
-                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightRed">
+                        <div class="px-4 py-2 text-white font-bold text-center rounded-full md:py-1 bg-brightGreen">
                             03
                         </div>
                         <h3 class = "text-base font-bold md:mb-4 md:hidden">
@@ -190,7 +191,7 @@
 <!-- End of Features -->
 
 <!--CTA Section-->
-<section class="bg-brightRed" id="cta">
+<section class="bg-brightBlue" id="cta">
     <div class="container flex flex-col items-center justify-between px-6 py-24 mx-auto space-y-12 md:py-12 md:flex-row md:space-y-0">
         <h2 class="text-5xl font-bold leading-tight text-center text-white md:text-4xl md:max-w-xl md:text-left">
             Start exploring with our user-friendly analytics platform
@@ -220,7 +221,7 @@
                 APIN Health Informatics Team
             </div>
             <div>
-                <img src="https://raw.githubusercontent.com/oisujeh/trainsmart1/b92d4b5ed844cb6e8146695b3da0e3f3ee9117de/public/assets/img/logo-white.svg" alt="logo" class="h-8">
+                <img src="{{asset('assets/image/logo.jpeg')}}" class="block h-8" alt="Here">
             </div>
 <!--            <div class="flex justify-center space-x-4">
                 <a href="#">

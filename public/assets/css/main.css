@@ -1,9 +1,8 @@
 body {
     font-family: "Roboto", sans-serif;
-    background-image: url('https://raw.githubusercontent.com/oisujeh/trainsmart1/b92d4b5ed844cb6e8146695b3da0e3f3ee9117de/public/assets/img/bg-tablet-pattern.svg');
-    background-repeat: no-repeat;
+   /* background-repeat: no-repeat;
     background-size: 800px;
-    background-position: 90% -25%;
+    background-position: 90% -25%;*/
 }
 
 #cta {
