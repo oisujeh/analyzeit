@@ -10,6 +10,7 @@ use App\Helpers\VL as Helper2;
 use App\Helpers\Mortality as Helper3;
 use App\Helpers\Biometrics as Helper4;
 use App\Helpers\VLAnalytics as Helper5;
+use App\Helpers\Ahd as Helper6;
 use Illuminate\Support\Facades\View;
 
 
@@ -33,29 +34,21 @@ Route::post('/treatment-filter', function(Request $request) {
     $selectIndicator = $request->selectIndicator;
     $start_date = $request->start_date;
     $end_date = $request->end_date;
-    switch($selectIndicator) {
-        case 'pvls':
-            return Helper2::vLGraph($request, $selectIndicator);
-        case 'tx_curr':
-            return Helper::treamentPerformance($request,$selectIndicator,$start_date,$end_date);
-        case 'tx_new':
-            return Helper1::treament_new_Performance($request,$selectIndicator,$start_date,$end_date);
-        default:
-            // Handle unexpected selectIndicator value
-            return response()->json(['error' => 'Invalid selectIndicator value'], 400);
-    }
+    return match ($selectIndicator) {
+        'pvls' => Helper2::vLGraph($request, $selectIndicator),
+        'tx_curr' => Helper::treamentPerformance($request, $selectIndicator, $start_date, $end_date),
+        'tx_new' => Helper1::treament_new_Performance($request, $selectIndicator, $start_date, $end_date),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
 })->name('treatment.filter');
 
 
 Route::post('/vl-filter', function(Request $request) {
     $selectIndicator = $request->selectIndicator;
-    switch($selectIndicator) {
-        case 'vl':
-            return Helper5::vl_analytics($request, $selectIndicator);
-        default:
-            // Handle unexpected selectIndicator value
-            return response()->json(['error' => 'Invalid selectIndicator value'], 400);
-    }
+    return match ($selectIndicator) {
+        'vl' => Helper5::vl_analytics($request, $selectIndicator),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
 })->name('vl.filter');
 
 Route::post('/quality-care', function(Request $request){
@@ -76,6 +69,16 @@ Route::post('/mortality', function(Request $request){
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('mortality.filter');
+
+Route::post('/ahd', function(Request $request){
+    $selectIndicator = $request->selectIndicator;
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    return match ($selectIndicator) {
+        'ahd' => Helper6::ahd_Performance($request, $start_date, $end_date),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
+})->name('ahd.filter');
 
 Route::post('/pbs', function(Request $request){
     $selectIndicator = $request->selectIndicator;
@@ -106,7 +109,6 @@ Route::get('/sendSMS', function(Request $request){
         ->where(['status'=>0])
         ->where('next_appointment', Carbon::today()->addDays(2)->toDate())
         ->whereNotNull('phone_no')->get();
-
 
     $sent = [];
     $res = "";

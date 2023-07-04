@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static select(\Illuminate\Database\Query\Expression $raw)
+ */
 class TreatmentPerformance extends Model
 {
     public $table = "treatment_table";

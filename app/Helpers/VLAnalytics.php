@@ -52,12 +52,6 @@ class VLAnalytics
             $supData2[] = $facsupCov[$index];
         }
 
-
-
-
-
-
-
         $statsql = "
             CAST(COALESCE(SUM(`active`),0)  AS UNSIGNED) AS `patientsOnART`,
             CAST(COALESCE(SUM(`eligible`),0)  AS UNSIGNED) AS `eligibleNo`,
@@ -106,10 +100,8 @@ class VLAnalytics
                     'lGAVLSupSeries' => $supData,
                     'facilityVLSupSeries' => $supData2
                 ],
-
             ]
         ];
-
     }
 
     public static function vLsuppress($data): array
@@ -633,12 +625,6 @@ class VLAnalytics
         return $graphData;
     }
 
-
-
-
-
-
-
     public static function ipSupVL($data): array
     {
         $list =  VLDashboard::select(DB::raw("
@@ -1116,8 +1102,5 @@ class VLAnalytics
         }
         return $graphData;
     }
-
-
-
 
 }

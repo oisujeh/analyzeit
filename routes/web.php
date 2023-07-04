@@ -24,11 +24,11 @@ Route::group(['middleware' => ['auth']], function () {
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+    ])->group(function () {
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+    });
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('monitoring/quality_of_care', [App\Http\Controllers\MonitoringController::class,'regimenDashboard'])->name('regimen');
 
     Route::get('monitoring/mortality', [App\Http\Controllers\MonitoringController::class,'mortality'])->name('mortality');
+    Route::get('monitoring/ahd', [App\Http\Controllers\MonitoringController::class,'ahd'])->name('ahd');
 
     Route::get('monitoring/appointment_dashboard', [App\Http\Controllers\MonitoringController::class,'appointmentDashboard'])->name('appointment');
     Route::get('/upload', [App\Http\Controllers\UploadController::class,'index']);
