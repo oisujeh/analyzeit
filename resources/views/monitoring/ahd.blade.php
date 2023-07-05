@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('AHD Casacde') }}
+            {{ __('AHD Analytics') }}
         </h2>
     </x-slot>
 
@@ -134,9 +134,37 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
+                    <div class="grid grid-cols-1 mt-8">
+                        <div class="col-span-1 bg-white drop-shadow-md relative">
+                            <div class="box-heading ml-4 mt-2 font-bold text-sm">
+                                Cryptococcal Meningitis (CM) Cascade
+                            </div>
+                            <div class="box-content">
+                                <div class="chart" id="crAgCascades">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 mt-8">
+                        <div class="col-span-1 bg-white drop-shadow-md relative">
+                            <div class="box-heading ml-4 mt-2 font-bold text-sm">
+                                Tuberculosis (TB) Cascade
+                            </div>
+                            <div class="box-content">
+                                <div class="chart" id="tbCascades">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- End main content -->
+
             </div>
         </div>
     </div>
@@ -231,8 +259,8 @@
             function build_ahd_charts(data) {
                 console.log(data);
                 populateTestingCascades(data);
-                /*populateCryptococcalMeningitisCascades(data);
-                populateTuberculosissCascades(data);*/
+                populateCryptococcalMeningitisCascades(data);
+                populateTuberculosissCascades(data)
             }
 
             function build_AHD_bar_chart(container_id, title, y_title, seriesData, colors, categories) {
@@ -292,7 +320,7 @@
                     },
                     colors: colors,
                     series: seriesData,
-                    exporting: { enabled: false }
+                    exporting: { enabled: true }
                 });
 
 
@@ -347,7 +375,108 @@
 
             }
 
-        </script>
+            function populateCryptococcalMeningitisCascades(data) {
+                var cmData = data.cm;
+                const Obj = [
+                    {
+                        name: [" "], type: 'column', showInLegend: false,
+                        data: [
+                            {
+                                name: "AHD Client",
+                                y: cmData.presumptiveAHDClients
 
+                            }, {
+                                name: "Serum CrAg",
+                                y: cmData.serumCragCount
+
+                            }, {
+                                name: "Serum CrAg Positive",
+                                y: cmData.serumCragPosCount
+
+                            }, {
+                                name: "CSF CrAg",
+                                y: cmData.csfCragCount
+
+                            },
+                            {
+                                name: "CSF CrAg Positive",
+                                y: cmData.csfCragPosCount
+
+                            },
+                            {
+                                name: "CM Treatment",
+                                y: 0
+
+                            }
+                        ]
+                    },
+                    {
+                        name: ["% Serum CrAg"], color: "#F88944", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, cmData.percentageSerumCrag, null, null, null, null]
+                    }
+                    , {
+                        name: ["% Serum CrAg Positive"], color: "#FF8D78", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, cmData.percentageSerumCragPos, null, null, null]
+                    },
+                    {
+                        name: ["% CSF CrAg"], color: "#7A76A4", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, null, cmData.percentageCsfCrag, null, null]
+                    },
+                    {
+                        name: ["% CM-HIV Co-Infection"], color: "#C5C5902", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, null, null, cmData.percentageCsfCragPos, null]
+                    },
+                    {
+                        name: ["% CM Treatment"], color: "#C5E0B4", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, null, null, null, 0]
+                    }
+                ];
+
+                var colors = ['#494FA3', '#FFB913'];
+                build_AHD_bar_chart("crAgCascades", '', '', Obj, colors, ['AHD Client', 'Serum CrAg', 'Serum CrAg Positive', 'CSF CrAg', 'CSF CrAg Positive', 'CM Treatment']);
+
+            }
+
+            function populateTuberculosissCascades(data) {
+                var tbData = data.tb;
+                const Obj = [{
+                    name: [""], type: 'column', showInLegend: false,
+                    data: [
+                        {
+                            name: "AHD Clients",
+                            y: tbData.presumptiveAHDClients
+                        }, {
+                            name: "TB-LAM Test",
+                            y: tbData.tB_LAMCount
+
+                        }, {
+                            name: "TB-LAM Positive",
+                            y: tbData.tB_LAMPosCount,
+
+                        }, {
+                            name: "TB Treatment",
+                            y: tbData.tB_LAMTreatmentCount,
+
+                        }
+                    ]
+                },
+                    {
+                        name: ["% TB-LAM Test"], color: "#F88944", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, tbData.percentageTB_LamTest, null, null]
+                    },
+                    {
+                        name: ["% TB-HIV Co-Infection"], color: "#FF8D78", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, tbData.percentageAHD_TBCoInfection, null]
+                    },
+                    {
+                        name: ["% TB Treatment"], color: "#7A76A4", type: 'spline', yAxis: 1, lineWidth: 0, states: { hover: { lineWidth: 0, lineWidthPlus: 0, marker: { radius: 7 } } },
+                        marker: { enable: true, symbol: "radius", radius: 7 }, data: [null, null, null, tbData.percentageAHDClientTB]
+                    }];
+
+                var colors = ['#494FA3', '#FFB913'];
+                build_AHD_bar_chart("tbCascades", '', '', Obj, colors, ['AHD Clients', 'TB-LAM Test', 'TB-LAM Positive', 'TB Treatment']);
+
+            }
+        </script>
     @endsection
 </x-app-layout>
