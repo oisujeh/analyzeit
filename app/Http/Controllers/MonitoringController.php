@@ -82,6 +82,13 @@ class MonitoringController extends Controller
         return view('monitoring.vl');
     }
 
+    public function ahd(): Factory|View|Application
+    {
+        return view('monitoring.ahd');
+    }
+
+
+
 
 
 }

@@ -133,7 +133,7 @@ class Scripts
             ->withoutGlobalScopes()
             ->first();
 
-        $response = [
+        return [
             'treatment_perfomance' => (!empty($list)) ? (array) $list->getAttributes() : [],
             'tx_curr_graph' => self::tx_Curr($data,$tx),
             'tx_age_group_graph' => self::ageGroup($data, $tx),
@@ -141,7 +141,6 @@ class Scripts
             'tx_new_lga_drill_data' => self::treamentPerformanceLgaGraph($data,$tx),
             'tx_new_age_sex' => self::tx_age_sex($data)
         ];
-        return $response;
     }
 
     public static function tx_Curr($data,$tx)
@@ -202,7 +201,7 @@ class Scripts
     }
 
 
-    public static function treamentPerformanceLgaGraph($data,$tx)
+    public static function treamentPerformanceLgaGraph($data,$tx): array
     {
 
         $stateListBar = [];
@@ -304,7 +303,7 @@ class Scripts
 
     public static function pedregimenGraph($data): array
     {
-        $facilityList2 = QualPerformance::select("regimen as regimen", \DB::raw("COUNT('regimen') as count"))
+        $facilityList2 = QualPerformance::select("regimen as regimen", DB::raw("COUNT('regimen') as count"))
             ->where('artstatus','=','Active')
             ->whereBetween('age', [0, 14])
             ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
