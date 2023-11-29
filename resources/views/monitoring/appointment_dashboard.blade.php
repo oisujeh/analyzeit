@@ -322,7 +322,7 @@
             );
 
             plotGraphsWithDrilldown(
-                "Today's appointments by State",
+                "Tomorrow's appointments by State",
                 dataTomorrow,
                 tomorrow_appointments_graph_drilldown,
                 "tomorrow_appointments_chart",

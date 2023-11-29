@@ -8,7 +8,7 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './node_modules/tw-elements/dist/js/**/*.js',
-        'node_modules/preline/dist/*.js',
+        './node_modules/preline/dist/*.js',
     ],
 
     theme: {
