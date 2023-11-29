@@ -14,24 +14,23 @@ class MonitoringController extends Controller
 {
     public function treatmentDashboard(): Factory|View|Application
     {
-        /*$data = [
-            'dashboardGraphs' => Helper::dashboardGraphs()
-        ];*/
         return view('monitoring.treatment_dashboard');
     }
 
     public function appointmentDashboard(): Factory|View|Application
     {
-        $todaysAppt = $this->dashboardScript("today_appointments");
+        $todaysAppt = Helper::dashbordScript("today_appointments");
+        $tomorrowsAppt = Helper::dashbordScript("tomorrow_appointments");
 
         $data = [
             'dashboardGraphs' => Helper::dashboardGraphs(),
-            'today_appointments' => Helper::dashbordScript("today_appointments")
+            'today_appointments' => Helper::dashbordScript("today_appointments"),
+            'tomorrow_appointments' => Helper::dashbordScript("tomorrow_appointments")
         ];
-        return view('monitoring.appointment_dashboard',compact('data','todaysAppt'));
+        return view('monitoring.appointment_dashboard',compact('data','todaysAppt','tomorrowsAppt'));
     }
 
-    #[ArrayShape(['stats' => "mixed", 'list' => "mixed"])] public function dashboardScript($table): array
+   /* public function dashboardScript($table): array
     {
 
         $StatsSql = "SELECT * FROM( SELECT
@@ -57,44 +56,7 @@ class MonitoringController extends Controller
 
         return array('stats'=> $stats ,'list'=> $list);
 
-    }
-
-    /*public function pbs(): Factory|View|Application
-    {
-        $active = DB::table('pbs_report')
-            ->select(DB::raw("
-            CAST(COALESCE(SUM(`active`),0) AS UNSIGNED) active
-            "
-            ))->get();
-
-        $captured = DB::table('pbs_report')
-            ->select(DB::raw("
-            CAST(COALESCE(SUM(`pbs_captured`),0) AS UNSIGNED) captured
-            "
-            ))->get();
-
-        $notcaptured = DB::table('pbs_report')
-            ->select(DB::raw("
-            CAST(COALESCE(SUM(`not_captured`),0) AS UNSIGNED) notcaptured
-            "
-            ))->get();
-
-        $valid = DB::table('pbs_report')
-            ->select(DB::raw("
-            CAST(COALESCE(SUM(`validfingers`),0) AS UNSIGNED) valid
-            "
-            ))->get();
-        $invalid = DB::table('pbs_report')
-            ->select(DB::raw("
-            CAST(COALESCE(SUM(`invalidfingers`),0) AS UNSIGNED) invalid
-            "
-            ))->get();
-
-        return view('monitoring.pbs', compact('active','captured','notcaptured','invalid','valid'));
-        //dd($pbsList);
-        //dd(json_encode($pbsList));
     }*/
-
 
     public function regimenDashboard(): Factory|View|Application
     {
@@ -114,6 +76,18 @@ class MonitoringController extends Controller
     {
         return view('monitoring.biometrics_report');
     }
+
+    public function vlDashboard()
+    {
+        return view('monitoring.vl');
+    }
+
+    public function ahd(): Factory|View|Application
+    {
+        return view('monitoring.ahd');
+    }
+
+
 
 
 

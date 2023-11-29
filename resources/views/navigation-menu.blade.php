@@ -6,12 +6,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-jet-application-mark class="block h-9 w-auto" />
+                        <img src="{{asset('assets/image/logo.jpeg')}}" class="block h-10 w-auto" alt="Here">
                     </a>
                 </div>
 
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
-
                     <div class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium
                     rounded-md text-gray-500 bg-white hover:bg-indigo-500 hover:text-white focus:outline-none focus:bg-indigo-100
                     active:bg-indigo-500 transition">
@@ -44,8 +43,16 @@
                                         <i class="uil uil-comparison mr-2"></i>{{ __('PBS') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
+                                    <x-jet-dropdown-link href="{{ route('ahd') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-chart-line mr-2"></i>{{ __('AHD') }}
+                                    </x-jet-dropdown-link>
+                                    <div class="border-t border-gray-100"></div>
                                     <x-jet-dropdown-link href="{{ route('regimen') }}" class="hover:text-blue-600">
                                         <i class="uil uil-chart-line mr-2"></i>{{ __('Quality of Care') }}
+                                    </x-jet-dropdown-link>
+                                    <div class="border-t border-gray-100"></div>
+                                    <x-jet-dropdown-link href="{{ route('vldashboard') }}" class="hover:text-blue-600">
+                                        <i class="uil uil-hourglass mr-2"></i>{{ __('VL') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
                                     <x-jet-dropdown-link href="{{ route('mortality') }}" class="hover:text-blue-600">
@@ -97,8 +104,8 @@
 
                             <x-slot name="content">
                                 <div class="w-60">
-                                    <x-jet-dropdown-link href="{{ route('appointment') }}">
-                                        {{ __('Appointment Dashboard') }}
+                                    <x-jet-dropdown-link href="{{ route('vlcascade') }}">
+                                        {{ __('Viral Load Cascade') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
                                 </div>
