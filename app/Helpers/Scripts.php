@@ -16,7 +16,7 @@ class Scripts
         COALESCE(SUM(`pbs`),0) pbs,
         COALESCE(SUM(`active`),0) active,
         COALESCE(SUM(`transferred_out`),0) transferred_out,
-        COALESCE(SUM(`dead`),0) dead,
+        COALESCE(SUM(`Dead`),0) dead,
         COALESCE(SUM(`stopped`),0) stopped,
         COALESCE(SUM(`ltfu`),0) `ltfu`,
         `IP` ";
@@ -118,10 +118,10 @@ class Scripts
             COUNT(`pepid`) AS `total_patients`,
             COALESCE(SUM(`PBS` = 'Yes'),0) AS pbs,
             COALESCE(SUM(`CurrentARTStatus` = 'Active'),0) AS `active`,
-            COALESCE(SUM(`Outcomes` LIKE '%Transferred%' AND  `CurrentARTStatus` NOT LIKE '%Active%'),0) AS transferred_out,
-            COALESCE(SUM(`Outcomes` LIKE '%Death%' AND  `CurrentARTStatus` NOT LIKE '%Active%'),0) AS dead,
-            COALESCE(SUM(`Outcomes` LIKE '%Discontinued Care%' AND  `CurrentARTStatus` NOT LIKE '%Active%'),0) AS stopped,
-            COALESCE(SUM(`CurrentARTStatus` = 'LTFU'),0) AS `ltfu`,
+            COALESCE(SUM(`CurrentARTStatus` LIKE '%Transferred%'),0) AS transferred_out,
+            COALESCE(SUM(`CurrentARTStatus` LIKE '%Dead%'),0) AS dead,
+            COALESCE(SUM(`CurrentARTStatus` LIKE '%Stopped%'),0) AS stopped,
+            COALESCE(SUM(`CurrentARTStatus` = 'LTFU' or `CurrentARTStatus` LIKE '%lost to%'),0) AS `ltfu`,
             MAX(DATE(`Pharmacy_LastPickupdate`)) AS emr_date,
             `ip`
 	    ";
