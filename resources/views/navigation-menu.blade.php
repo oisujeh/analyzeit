@@ -51,7 +51,7 @@
                                         <i class="uil uil-chart-line mr-2"></i>{{ __('Quality of Care') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>
-                                    <x-jet-dropdown-link href="{{ route('regimen') }}" class="hover:text-blue-600">
+                                    <x-jet-dropdown-link href="{{ route('dsd') }}" class="hover:text-blue-600">
                                         <i class="uil uil-prescription-bottle mr-2"></i>{{ __('DSD') }}
                                     </x-jet-dropdown-link>
                                     <div class="border-t border-gray-100"></div>

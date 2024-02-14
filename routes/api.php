@@ -11,6 +11,7 @@ use App\Helpers\Mortality as Helper3;
 use App\Helpers\Biometrics as Helper4;
 use App\Helpers\VLAnalytics as Helper5;
 use App\Helpers\Ahd as Helper6;
+use App\Helpers\DsdModel as Helper7;
 use Illuminate\Support\Facades\View;
 
 
@@ -79,6 +80,15 @@ Route::post('/ahd', function(Request $request){
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('ahd.filter');
+
+
+Route::post('/dsd', function(Request $request){
+    $selectIndicator = $request->selectIndicator;
+    return match ($selectIndicator) {
+        'dsd' => Helper7::dsd_analysis($request),
+        default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
+    };
+})->name('dsd.filter');
 
 Route::post('/pbs', function(Request $request){
     $selectIndicator = $request->selectIndicator;
