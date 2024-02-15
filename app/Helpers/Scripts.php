@@ -117,11 +117,11 @@ class Scripts
             FORMAT(COALESCE(COUNT(DISTINCT `datim_code`),0),0) AS `facilities`,
             COUNT(`pepid`) AS `total_patients`,
             COALESCE(SUM(`PBS` = 'Yes'),0) AS pbs,
-            COALESCE(SUM(`CurrentARTStatus` = 'Active'),0) AS `active`,
-            COALESCE(SUM(`CurrentARTStatus` LIKE '%Transferred%'),0) AS transferred_out,
-            COALESCE(SUM(`CurrentARTStatus` LIKE '%Dead%'),0) AS dead,
-            COALESCE(SUM(`CurrentARTStatus` LIKE '%Stopped%'),0) AS stopped,
-            COALESCE(SUM(`CurrentARTStatus` = 'LTFU' or `CurrentARTStatus` LIKE '%lost to%'),0) AS `ltfu`,
+            COALESCE(SUM(`CurrentARTStatus_Pharmacy` = 'Active'),0) AS `active`,
+            COALESCE(SUM(`CurrentARTStatus_Pharmacy` LIKE '%Transferred%'),0) AS transferred_out,
+            COALESCE(SUM(`CurrentARTStatus_Pharmacy` LIKE '%Dead%'),0) AS dead,
+            COALESCE(SUM(`CurrentARTStatus_Pharmacy` LIKE '%Stopped%'),0) AS stopped,
+            COALESCE(SUM(`CurrentARTStatus_Pharmacy` = 'LTFU' or `CurrentARTStatus_Pharmacy` LIKE '%lost to%'),0) AS `ltfu`,
             MAX(DATE(`Pharmacy_LastPickupdate`)) AS emr_date,
             `ip`
 	    ";
@@ -149,7 +149,7 @@ class Scripts
         sex AS `name`,
         COUNT('pepid') as `y`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
-            ->where('CurrentARTStatus','=','Active')
+            ->where('CurrentARTStatus_Pharmacy','=','Active')
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
@@ -170,7 +170,7 @@ class Scripts
         END) as name,
         COUNT('pepid') as `y`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
-            ->where('CurrentARTStatus','=','Active')
+            ->where('CurrentARTStatus_Pharmacy','=','Active')
             ->state($data->states)
             ->lga($data->lgas)
             ->facilities($data->facilities)
@@ -186,7 +186,7 @@ class Scripts
 
         $statsql = "
         state AS `name`,
-        CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) AS `y`,
+        CAST(COALESCE(SUM(`CurrentARTStatus_Pharmacy` = 'Active'),0)  AS UNSIGNED) AS `y`,
         state AS `drilldown`";
         $list =  TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)
@@ -217,7 +217,7 @@ class Scripts
             $stateListBar[$index1]['id'] = $states->name;
 
             $lgaList =  TreatmentPerformance::select(DB::raw(
-                " lga,lgaCode, CAST(COALESCE(SUM( `CurrentARTStatus` = 'Active' ),0)  AS UNSIGNED) as  'patients'"
+                " lga,lgaCode, CAST(COALESCE(SUM( `CurrentARTStatus_Pharmacy` = 'Active' ),0)  AS UNSIGNED) as  'patients'"
             ))->lga($data->lgas)->facilities($data->facilities)
                 ->where(['state' => $states->name])
                 ->groupBy('lga')
@@ -242,7 +242,7 @@ class Scripts
         }
 
         $facilityList =  TreatmentPerformance::select(DB::raw(
-            "lga, lgaCode,facility_name , CAST(COALESCE(SUM(`CurrentARTStatus` = 'Active'),0)  AS UNSIGNED) as  'patients'"
+            "lga, lgaCode,facility_name , CAST(COALESCE(SUM(`CurrentARTStatus_Pharmacy` = 'Active'),0)  AS UNSIGNED) as  'patients'"
         ))->lga($data->lgas)->facilities($data->facilities)
             ->groupBy('lga')
             ->groupBy('lgaCode')
@@ -352,7 +352,7 @@ class Scripts
 
         $txAgeSex= TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
-            ->where('CurrentArtStatus','=','Active')
+            ->where('CurrentARTStatus_Pharmacy','=','Active')
             ->groupBy('age_range')
             ->orderByRaw("FIELD(age_range, '<1','1-4','5-9','10-14','15-19','20-24','25-29','30-34','35-39','40-44','45-49','50+')")
             ->withoutGlobalScopes()

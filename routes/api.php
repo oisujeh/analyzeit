@@ -75,8 +75,10 @@ Route::post('/ahd', function(Request $request){
     $selectIndicator = $request->selectIndicator;
     $start_date = $request->start_date;
     $end_date = $request->end_date;
+    $age_group = $request->age_group;
+    $sex = $request->sex;
     return match ($selectIndicator) {
-        'ahd' => Helper6::ahd_Performance($request, $start_date, $end_date),
+        'ahd' => Helper6::ahd_Performance($request, $start_date, $end_date,$age_group,$sex),
         default => response()->json(['error' => 'Invalid selectIndicator value'], 400),
     };
 })->name('ahd.filter');
