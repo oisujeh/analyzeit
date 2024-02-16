@@ -22,7 +22,7 @@ class HomeController extends Controller
             ->where('CurrentARTStatus_Pharmacy','=','Active')
             ->where('Outcomes',NULL)
             ->where('TI','!=','Yes')
-            ->wherebetween('ARTStartDate',['2021-10-01','2022-09-30'])
+            ->wherebetween('ARTStartDate',['2023-10-01','2024-09-30'])
             ->groupBy('sex')
             ->get();
 
@@ -48,7 +48,7 @@ class HomeController extends Controller
             ->where('CurrentArtStatus_Pharmacy','=','Active')
             ->where('TI','!=','Yes')
             ->where('Outcomes',NULL)
-            ->wherebetween('ARTStartDate',['2021-10-01','2022-09-30'])
+            ->wherebetween('ARTStartDate',['2023-10-01','2024-09-30'])
             ->groupBy('age_range')
             ->get();/*public function getPerformance(){
         $performance = TreatmentPerformance::all();
@@ -62,7 +62,7 @@ class HomeController extends Controller
             ->orderBy('facility_name', 'asc')
             ->get();
 
-        
+
         $tx_curr = DB::table('linelist_full_apin')
             ->select(DB::raw('
                 state as name,

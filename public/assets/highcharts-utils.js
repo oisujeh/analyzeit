@@ -3598,6 +3598,87 @@ function build_stacked_mschart(container_id, xaxisCategory, yaxistitle, seriesDa
     });
 }
 
+function build_bar_charts_commodity(id, title, yaxistitle, principal_data, drill_down_data, vals) {
+
+    var colors = vals;
+
+    if ((drill_down_data || []).length > 0) {
+        drill_down_data.forEach((v) => {
+            v.events = {
+                afterAnimate: function (event) {
+                    resizeChart(this.chart.container.parentElement);
+                    this.chart.reflow();
+                }
+            };
+        });
+    }
+    if (principal_data.length > 0) {
+        principal_data.forEach((s) => {
+            s.events = {
+                afterAnimate: function (event) {
+                    resizeChart(this.chart.container.parentElement);
+                    this.chart.reflow();
+                }
+            };
+        });
+    }
+
+    yaxistitle = yaxistitle;
+
+    var yAxis = [{
+        title: {
+            text: yaxistitle
+        },
+        labels: {
+            formatter: function () {
+                return this.value;
+            }
+        }
+    }];
+
+    var test = {
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: null,
+            style: {
+                fontSize: '12px'
+            }
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category',
+            title: {
+                text: "States",
+                enabled: false
+            }
+        },
+        yAxis: yAxis,
+        legend: {
+            enabled: true
+        },
+        plotOptions: {
+            series: {
+                colors: colors,
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b>'
+        },
+        exporting: { enabled: false },
+        series: principal_data,
+        drilldown: {
+            series: drill_down_data
+        }
+    };
+    Highcharts.chart(id, test);
+}
+
 
 
 
