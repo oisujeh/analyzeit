@@ -158,6 +158,5 @@ class Ahd
 
         return $query->withoutGlobalScopes();
     }
-
-
+    
 }

@@ -141,6 +141,89 @@ function Build_Pos_Neg_Chart(id, title, categories, series_data, max) {
     });
 }
 
+function Build_Pos_Neg_Chart1(id, title, categories, series_data, max) {
+
+    Highcharts.chart(id, {
+        chart: {
+            type: 'bar',
+            height: 500
+        },
+        title: {
+            text: 'Number of Dead Clients Disaggregated by Age and Sex'
+        },
+        colors: ['#000000','#000000'],
+        xAxis: [{
+            categories: categories,
+            reversed: false,
+            labels: {
+                step: 1,
+            },
+
+            title: {
+                text: "Age (Male)"
+            },
+        }, { // mirror axis on right side
+            opposite: true,
+            reversed: false,
+            categories: categories,
+            linkedTo: 0,
+            labels: {
+                step: 1
+            },
+            title: {
+                text: "Age (Female)"
+            },
+        }],
+        yAxis: {
+            gridLineWidth: 0,
+            minorGridLineWidth: 0,
+            labels: {
+                formatter: function () {
+                    return Math.abs(this.value);
+                },
+            },
+            title: {
+                text: "No. of Deaths",
+                style: {
+                    color: Highcharts.getOptions().colors[1]
+                }
+            },
+            max: (max + percentage(max, 10)),
+            min: -(max + percentage(max, 10))
+        },
+
+        plotOptions: {
+            series: {
+                stacking: 'normal',
+                grouping: false,
+                pointWidth: 8
+            }
+        },
+
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.series.name + ', age ' + this.point.category + '</b><br/>' +
+                    'Total: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+            }
+        },
+
+        /*tooltip:
+            {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>' + Math.abs(this.point.y) + '<b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },*/
+
+        exporting: { enabled: true },
+
+        series: series_data
+
+    });
+}
+
 function percentage(num, per) {
     var result = num * (per / 100);
     return Math.round(result);
