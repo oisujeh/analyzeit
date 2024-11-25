@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\TreatmentPerformance;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\ArrayShape;
 
 class Mortality
@@ -30,7 +31,6 @@ class Mortality
             'sex_total' => self::sexByMortality($data, $start_date, $end_date),
             'vl'  => self::vlByMortality($data, $start_date, $end_date),
             'artd'  => self::ArtDuration($data, $start_date, $end_date),
-            'ageband' => self::ageBand($data, $start_date, $end_date),
             'deadAgeSex' => self::deadAgeSex($data,$start_date, $end_date)
         ];
     }
@@ -143,53 +143,23 @@ class Mortality
         $statsql = "
         state as states,
         CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) < 365) as unsigned) AS `less_1`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 365 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 1095) as unsigned) AS `b1_3`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 1095 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 1825) as unsigned) AS `b3_5`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 1825) as unsigned) AS `gt_5`
+        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 365 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 1825) as unsigned) AS `b1_5`,
+        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 1825 and DATEDIFF(Outcomes_Date, ARTStartDate) <= 3650) as unsigned) AS `b5_10`,
+        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and DATEDIFF(Outcomes_Date, ARTStartDate) > 3650) as unsigned) AS `gt_10`
         ";
 
         $list = TreatmentPerformance::select(DB::raw($statsql))
             ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
             ->whereBetween('Outcomes_Date', [$start_date,$end_date])
-            ->groupBy('state')
-             ->orderBy('state','ASC')
-            ->withoutGlobalScopes()
-            ->get();
-        return (!empty($list)) ? $list->toArray() : [];
-    }
-
-    public static function ageBand($data, $start_date, $end_date): array
-    {
-        $statsql = "
-        state as states,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') and age < 1) as unsigned) AS `less_1`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 1 AND 4) AS UNSIGNED) AS `age_1_to_4`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 4 AND 9) AS UNSIGNED) AS `age_4_to_9`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 10 AND 14) AS UNSIGNED) AS `age_10_to_14`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 15 AND 19) AS UNSIGNED) AS `age_15_to_19`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 20 AND 24) AS UNSIGNED) AS `age_20_to_24`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 25 AND 29) AS UNSIGNED) AS `age_25_to_29`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 30 AND 34) AS UNSIGNED) AS `age_30_to_34`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 35 AND 39) AS UNSIGNED) AS `age_35_to_39`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 40 AND 44) AS UNSIGNED) AS `age_40_to_44`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND `age` BETWEEN 45 AND 49) AS UNSIGNED) AS `age_45_to_49`,
-        CAST(SUM((`Outcomes` = 'Dead' OR `Outcomes` = 'Death') AND age > 49) AS UNSIGNED) AS `age_50`
-
-
-        ";
-
-        $list = TreatmentPerformance::select(DB::raw($statsql))
-            ->state($data->states)->lga($data->lgas)->facilities($data->facilities)
-            ->whereBetween('Outcomes_Date', [$start_date,$end_date])
-            ->groupBy('state')
-            ->orderBy('state','ASC')
+           /* ->groupBy('state')
+             ->orderBy('state','ASC')*/
             ->withoutGlobalScopes()
             ->get();
         return (!empty($list)) ? $list->toArray() : [];
     }
 
 
-    public static function deadAgeSex($data,$start_date, $end_date): array
+    /*public static function deadAgeSex($data,$start_date, $end_date): array
     {
 
         $statsql = "
@@ -231,13 +201,71 @@ class Mortality
             $female_count[$index] =  $list->female_count;
         }
 
+        Log::info('Query Results: ', $deadAgeSex->toArray());
+
         $result=[
             'male_data'=>$male_count,
             'female_data' => $female_count
         ];
 
         return (!empty($result)) ?  $result : [];
-    }
+    }*/
 
+    public static function deadAgeSex($data, $start_date, $end_date): array
+    {
+        $ageRanges = [
+            '<1' => [0, 0],
+            '1-4' => [1, 4],
+            '5-9' => [5, 9],
+            '10-14' => [10, 14],
+            '15-19' => [15, 19],
+            '20-24' => [20, 24],
+            '25-29' => [25, 29],
+            '30-34' => [30, 34],
+            '35-39' => [35, 39],
+            '40-44' => [40, 44],
+            '45-49' => [45, 49],
+            '50-54' => [50, 54],
+            '55-59' => [55, 59],
+            '60-64' => [60, 64],
+            '65-69' => [65, 69],
+            '70+' => [70, null],
+        ];
+
+        $deadAgeSex = TreatmentPerformance::selectRaw("
+        CASE
+            " . collect($ageRanges)->map(function ($range, $label) {
+                return $range[1] === null
+                    ? "WHEN age >= {$range[0]} THEN '{$label}'"
+                    : "WHEN age BETWEEN {$range[0]} AND {$range[1]} THEN '{$label}'";
+            })->join(' ') . "
+        END AS age_range,
+        SUM(CASE WHEN sex = 'M' THEN -1 ELSE 0 END) AS male_count,
+        SUM(CASE WHEN sex = 'F' THEN 1 ELSE 0 END) AS female_count
+    ")
+            ->state($data->states)
+            ->lga($data->lgas)
+            ->facilities($data->facilities)
+            ->whereIn('Outcomes', ['Dead', 'Death'])
+            ->whereBetween('Outcomes_Date', [$start_date, $end_date])
+            ->groupBy('age_range')
+            ->orderByRaw("FIELD(age_range, '" . implode("','", array_keys($ageRanges)) . "')")
+            ->withoutGlobalScopes()
+            ->get();
+
+        $maleData = [];
+        $femaleData = [];
+
+        foreach (array_keys($ageRanges) as $range) {
+            $record = $deadAgeSex->firstWhere('age_range', $range);
+            $maleData[] = $record ? (int) $record->male_count : 0;
+            $femaleData[] = $record ? (int) $record->female_count : 0;
+        }
+
+        return [
+                "male_data" => $maleData,
+                "female_data" => $femaleData,
+        ];
+    }
 
 }

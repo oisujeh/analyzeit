@@ -202,18 +202,11 @@
                     </div>
 
 
+
+
+
                     <div class="grid grid-cols-1 mt-6">
                         <div class="col-span-1 bg-white drop-shadow-md relative">
-                            <div class="box-content">
-                                <div class="chart" id="msAgeDisaggregate">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="grid grid-cols-1 mt-6">
-                        <div class="col-span-2 bg-white drop-shadow-md relative">
                             <div class="box-content">
                                 <div class="chart" id="ageSexChart">
                                 </div>
@@ -356,6 +349,8 @@
 
 
 
+
+
                 //-------Sex Disaggregation-------------------------
                 //Sex Disaggregation Pie chart
                 let ttMales = data.sex_total[0].males;
@@ -376,6 +371,9 @@
                 let percentSuppressed = (ttSuppressed / ttVl) * 100;
                 let percentUnsuppressed = (ttUnsuppressed / ttVl) * 100;
                 let percentNoVl = (ttNoViralLoadResult / ttVl) * 100;
+
+
+
 
 
                 //----------------Regimen Line-----------------------
@@ -416,26 +414,47 @@
 
                 //------------ART Duration---------------------
                 let artDurationLt1 = [];
-                let artDurationGt2LtEq3 = [];
-                let artDurationGt4LtEq5 = [];
-                let artDurationGt5 = [];
+                let artDurationGt1LtEq5 = [];
+                let artDurationGt5LtEq10 = [];
+                let artDurationGt10 = [];
+
+
+
 
                 if(data.artd && data.artd.length){
                     data.artd.forEach(function(rg, i){
                         artDurationLt1.push({ name: rg.states, y: rg.less_1 });
-                        artDurationGt2LtEq3.push({ name: rg.states, y: rg.b1_3 });
-                        artDurationGt4LtEq5.push({ name: rg.states, y: rg.b3_5 });
-                        artDurationGt5.push({ name: rg.states, y: rg.gt_5 });
+                        artDurationGt1LtEq5.push({ name: rg.states, y: rg.b1_5 });
+                        artDurationGt5LtEq10.push({ name: rg.states, y: rg.b5_10 });
+                        artDurationGt10.push({ name: rg.states, y: rg.gt_10 });
                     });
                 }
 
                 let artDurationSeries =
                     [
                         { name: '<1 year', data: artDurationLt1 },
-                        { name: '1 year - 3 years', data: artDurationGt2LtEq3 },
-                        { name: '> 3 years, 5 years', data: artDurationGt4LtEq5 },
-                        { name: '> 5 years', data: artDurationGt5 }
+                        { name: '1 - 5 years', data: artDurationGt1LtEq5 },
+                        { name: '5 - 10 years', data: artDurationGt5LtEq10 },
+                        { name: '>10 years', data: artDurationGt10 }
                     ];
+
+                let artL1s = artDurationLt1.reduce((accumulator,object) => {
+                    return accumulator + object.y;
+                },0)
+
+                let artGt1G5s = artDurationGt1LtEq5.reduce((accumulator,object) => {
+                    return accumulator + object.y;
+                },0)
+
+                let artG5L10s = artDurationGt5LtEq10.reduce((accumulator,object) => {
+                    return accumulator + object.y;
+                },0)
+
+                let artG10s = artDurationGt10.reduce((accumulator,object) => {
+                    return accumulator + object.y;
+                },0)
+
+
 
 
                 //------------Age Disaggregate---------------------
@@ -483,6 +502,14 @@
                         { name: '40 - 44', data: age40to44 },
                         { name: '45 - 49', data: age45to49 },
                         { name: '50 and above', data: age50 }
+                    ];
+
+                let artData =
+                    [
+                        { name: '<1 year', y: artL1s },
+                        { name: '1 - 5 years', y: artGt1G5s },
+                        { name: '> 5 - 10 years', y: artG5L10s },
+                        { name: '>10 years', y: artG10s }
                     ];
 
                 Highcharts.chart('msRegs',
@@ -551,91 +578,30 @@
 
                     });
 
-                Highcharts.chart('msAgeDisaggregate',
-                    {
-                        chart:
-                            {
-                                type: 'column'
-                            },
-                        plotOptions:
-                            {
-                                column:
-                                    {
-                                        stacking: 'percent',
-                                        dataLabels:
-                                            {
-                                                enabled: true
-                                            },
-                                        pointPadding: 0,
-                                        borderWidth: 0
-                                    }
-                            },
-                        title:
-                            {
-                                text: 'Number of Dead Clients Disaggregated by Age Band'
-                            },
-                        colors: ['#ff9e80', '#ff5722', '#ff9800', '#607d8b', '#64b5f6', '#888888', '#1565c0', '#000000'], //, '#bbdefb', '#0d47a1'
-                        xAxis:
-                            {
-                                title:
-                                    {
-                                        useHTML: true
-                                    },
-                                type: "category",
-                                //categories: protocolNames,
-                                labels:
-                                    {
-                                        useHTML: true,
-                                        //rotation:90
-                                    }
-                            },
-                        yAxis:
-                            { // Primary yAxis
-                                gridLineWidth: 0,
-                                minorGridLineWidth: 0,
-                                labels: {
-                                    format: '{value}',
-                                    style: {
-                                        color: Highcharts.getOptions().colors[1]
-                                    }
-                                },
-                                title: {
-                                    text: 'Total Deaths',
-                                    style: {
-                                        color: Highcharts.getOptions().colors[1]
-                                    }
-                                }
-                            },
-                        tooltip:
-                            {
-                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                    '<td style="padding:0"><b>{point.y} <b></td></tr>',
-                                footerFormat: '</table>',
-                                shared: true,
-                                useHTML: true
-                            },
-                        series: ageDisaggregateSeries
-                    });
 
 
                 Highcharts.chart('msArtDurationState',
                     {
                         chart:
                             {
-                                type: 'column'
+                                type: 'pie'
                             },
+                        accessibility: {
+                            point: {
+                                valueSuffix: '%'
+                            }
+                        },
                         plotOptions:
                             {
-                                column:
+                                pie:
                                     {
-                                        stacking: 'percent',
-                                        dataLabels:
-                                            {
-                                                enabled: true
-                                            },
-                                        pointPadding: 0,
-                                        borderWidth: 0
+                                        allowPointSelect: true,
+                                        cursive: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>:<br>{point.y} ({point.percentage:.1f}%)'
+                                        },
+                                        showInLegend: true
                                     }
                             },
                         title:
@@ -643,47 +609,23 @@
                                 text: 'Number of Dead Clients Disaggregated by Duration on ART'
                             },
                         colors: ['#ff9e80', '#ff5722', '#ff9800', '#607d8b', '#64b5f6', '#1565c0'], //, '#bbdefb', '#0d47a1'
-                        xAxis:
-                            {
-                                title:
-                                    {
-                                        useHTML: true
-                                    },
-                                type: "category",
-                                //categories: protocolNames,
-                                labels:
-                                    {
-                                        useHTML: true,
-                                        //rotation:90
-                                    }
-                            },
-                        yAxis:
-                            { // Primary yAxis
-                                gridLineWidth: 0,
-                                minorGridLineWidth: 0,
-                                labels: {
-                                    format: '{value}',
-                                    style: {
-                                        color: Highcharts.getOptions().colors[1]
-                                    }
-                                },
-                                title: {
-                                    text: 'Total Deaths',
-                                    style: {
-                                        color: Highcharts.getOptions().colors[1]
-                                    }
-                                }
-                            },
                         tooltip:
                             {
                                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                                 pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                                    '<td style="padding:0"><b>{point.y} <b></td></tr>',
+                                    '<td style="padding:0"><b>{point.y} ({point.percentage:.1f}%) <b></td></tr>',
                                 footerFormat: '</table>',
                                 shared: true,
                                 useHTML: true
                             },
-                        series: artDurationSeries
+                        series: [
+                            {
+                                name: 'Death rates by ART Duration',
+                                colorByPoint: true,
+                                innerSize: '60%',
+                                data: artData
+                            }
+                        ]
                     });
 
                 Highcharts.chart('msVlPie',
