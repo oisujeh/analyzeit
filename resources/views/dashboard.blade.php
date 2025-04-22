@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Summary') }}
         </h2>
     </x-slot>
 
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="grid sm:grid-cols-1 bg-white drop-shadow-md mt-4 text-xs">
+            {{--<div class="grid sm:grid-cols-1 bg-white drop-shadow-md mt-4 text-xs">
                 <div class="container mx-auto">
                     <h4 class=" ml-2 mt-2 text-gray-700 text-bold">TREATMENT OVERVIEW BY STATES</h4>
                     <div class="flex flex-col">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--}}
         </div>
     </div>
 
